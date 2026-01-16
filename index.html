@@ -3,320 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Treasure ❤️</title>
+    <title>Good Morning Treasure ☀️</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS STYLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* --- CORE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #a18cd1 100%);
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
             height: 100vh;
-            overflow: hidden; /* Prevent scrolling */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #4a4a4a;
+            color: #fff;
             text-align: center;
         }
 
-        #app {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
+        #app { width: 100%; height: 100%; position: relative; }
 
         .slide {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex; /* Flex to center content */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.8s ease-in-out;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 25px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease;
+            transform: scale(0.95);
             z-index: 10;
         }
 
         .slide.active {
-            opacity: 1;
-            pointer-events: all;
+            opacity: 1; pointer-events: all;
+            transform: scale(1);
         }
 
+        /* TYPOGRAPHY */
         h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: 3rem;
-            color: #d63384;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
         p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             line-height: 1.6;
-            margin-bottom: 30px;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 15px;
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
+            margin-bottom: 25px;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
+        /* BUTTONS */
         .btn {
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            background: #ff6b6b;
-            color: white;
+            padding: 15px 40px;
+            font-size: 1rem;
+            background: #fff;
+            color: #FF5E62;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+            background: #ffe6e6;
         }
 
-        /* Flower Animation */
-        .bouquet {
-            font-size: 5rem;
-            animation: bloom 2s ease-out infinite alternate;
-        }
-
-        @keyframes bloom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2) rotate(5deg); }
-        }
-
-        /* Choice Buttons */
-        .choice-container {
-            display: flex;
-            gap: 20px;
-        }
-
-        /* Matter JS Canvas container */
-        #physics-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* Behind text */
-            pointer-events: none; /* Let clicks pass through to canvas if needed, handled by JS */
-        }
-        
-        /* Love Card Styling */
-        .card-container {
-            perspective: 1000px;
-            width: 300px;
-            height: 200px;
+        /* --- SLIDE 1: SUN ANIMATION --- */
+        .sun-container {
+            width: 150px; height: 150px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #FFD700, 0 0 80px #FF8C00;
             cursor: pointer;
+            animation: pulse 2s infinite;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            transition: transform 1s;
         }
         
-        .card-inner {
+        .sun-container:active { transform: scale(5); opacity: 0; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 40px #FFD700; }
+            50% { transform: scale(1.1); box-shadow: 0 0 60px #FFD700, 0 0 100px #FF4500; }
+            100% { transform: scale(1); box-shadow: 0 0 40px #FFD700; }
+        }
+
+        /* --- SLIDE 3: COFFEE --- */
+        .coffee-emoji { font-size: 5rem; animation: steam 2s infinite alternate; }
+        @keyframes steam { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
+
+        /* --- SLIDE 4: SCRATCH CARD --- */
+        #scratch-container {
             position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .card-container.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 300px; height: 150px;
+            margin-bottom: 20px;
             border-radius: 15px;
+            overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-
-        .card-front {
-            background-color: #ff6b6b;
-            color: white;
-            font-family: 'Pacifico';
-            font-size: 2rem;
+        
+        #secret-message {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: white;
+            color: #FF5E62;
+            font-family: 'Dancing Script';
+            font-size: 1.8rem;
+            padding: 10px;
+            z-index: 1;
         }
 
-        .card-back {
-            background-color: white;
-            color: #333;
-            transform: rotateY(180deg);
-            padding: 20px;
-            font-size: 1rem;
-            flex-direction: column;
+        canvas#scratch-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 2;
+            cursor: pointer;
         }
 
-        /* Typing Cursor */
-        .typing::after {
-            content: '|';
-            animation: blink 0.7s infinite;
+        /* --- SLIDE 5: PHYSICS --- */
+        #physics-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
         }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .floating-text {
+            position: relative; z-index: 20; pointer-events: none;
+        }
 
-        /* Mobile Adjustments */
+        /* HIDDEN UTILS */
+        .hidden { display: none; }
+
+        /* MOBILE ADJUSTMENTS */
         @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            p { font-size: 1rem; }
-            .bouquet { font-size: 4rem; }
+            h1 { font-size: 2.5rem; }
+            p { font-size: 0.95rem; }
+            .sun-container { width: 120px; height: 120px; }
         }
+        /* Glassmorphism Popup Design */
+.glass-popup {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 35px !important; /* Extra smooth corners */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+    padding: 2.5rem !important;
+}
+
+/* Elegant Script Title for Glass */
+.glass-title {
+    font-family: 'Dancing Script', cursive !important;
+    font-size: 3rem !important;
+    color: #ffffff !important;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.2) !important;
+}
+
+/* Glassmorphism Button */
+.glass-button {
+    margin-top: 20px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(5px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+    padding: 12px 40px !important;
+    border-radius: 50px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease !important;
+}
+
+.glass-button:hover {
+    background: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+.glass-button:active {
+    transform: scale(0.95);
+}
+
+/* Ensure Animate.css is available for the zoom effect */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+.floating-heart {
+    position: fixed;
+    bottom: -50px;
+    color: #FF5E62;
+    pointer-events: none;
+    z-index: 9999;
+    animation: floatUp linear forwards;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
     </style>
 </head>
 <body>
 
     <div id="app">
+        
         <div class="slide active" id="slide1">
-            <h1>Hello Treasure</h1>
-            <p>I have a little surprise for you.</p>
-            <button class="btn" onclick="nextSlide(2)">Tap to Open</button>
+            <h1>Good Morning!</h1>
+            <p>The sun is waiting for you to wake it up...</p>
+            <div class="sun-container" onclick="nextSlide(2)">☀️</div>
+            <span style="font-size: 0.8rem; opacity: 0.8;">(Tap the Sun)</span>
         </div>
 
         <div class="slide" id="slide2">
-            <h1>Hey Beautiful...</h1>
-            <p id="typewriter-text"></p>
-            <button class="btn hidden-btn" style="display:none;" onclick="nextSlide(3)">Continue</button>
+            <h1>Hey Treasure ❤️</h1>
+            <p>Open your eyes and smile beautiful, <br>it's a brand new day! <br><br> Even the sun is jealous of how bright you shine.</p>
+            <button class="btn" onclick="nextSlide(3)">I'm Awake!</button>
         </div>
 
         <div class="slide" id="slide3">
-            <h1>For You</h1>
-            <div class="bouquet">💐 🌹 🌸</div>
-            <p>I wish I were there to give you these in person...</p>
-            <button class="btn" onclick="nextSlide(4)">Next</button>
+            <h1>Morning Fuel ☕</h1>
+            <div class="coffee-emoji">☕🥐</div>
+            <p>I can't bring you breakfast in bed (yet), so here is a virtual hug and a warm cup of love to start your day.</p>
+            <p style="font-size: 0.9rem; font-weight: bold;">I hope your day is as sweet as your voice.</p>
+            <button class="btn" onclick="nextSlide(4)">Get Surprise</button>
         </div>
 
         <div class="slide" id="slide4">
-            <h1>Hold on to this...</h1>
-            <div style="font-size: 4rem; margin: 10px;">💋</div>
-            <p>Until I see your beautiful lips, keep this one safe.</p>
-            <p style="font-size: 0.9rem; color: #d63384; font-weight: bold;">
-                Also, I hope that cold goes away fast! <br>
-                If it doesn't, I'm coming over to cuddle it out of you. 😤❤️
-            </p>
-            <button class="btn" onclick="nextSlide(5)">Promise?</button>
+            <h1>Rub the Screen!</h1>
+            <p>There is a secret message hidden below the fog. Rub it with your finger to reveal it.</p>
+            
+            <div id="scratch-container">
+                <div id="secret-message">You are my Favorite Notification ❤️</div>
+                <canvas id="scratch-canvas"></canvas>
+            </div>
+
+            <button class="btn hidden" id="scratch-next-btn" onclick="nextSlide(5)">See Magic</button>
         </div>
 
         <div class="slide" id="slide5">
-            <h1>Quick Question</h1>
-            <p>Who is the most amazing person in the world?</p>
-            <div class="choice-container">
-                <button class="btn" onclick="handleChoice('me')">Me (Treasure)</button>
-                <button class="btn" onclick="handleChoice('bf')">monpress (My BF)</button>
-            </div>
-            <p id="choice-result" style="display:none; margin-top:15px; font-weight:bold;"></p>
-            <button class="btn" id="next-5" style="display:none; margin-top: 10px;" onclick="nextSlide(6)">Play with Hearts</button>
+            <div id="physics-container"></div>
+            <h1 class="floating-text">Love is in the Air</h1>
+            <p class="floating-text">drag the bubbles! <br> (Or just watch them float like my heart does when I see you)</p>
+            <button class="btn" style="position: relative; z-index: 30; margin-top: 200px;" onclick="nextSlide(6)">One Last Note</button>
         </div>
 
         <div class="slide" id="slide6">
-            <div id="physics-container"></div>
-            <h1 style="position: relative; z-index: 20; pointer-events: none;">Tilt your phone!</h1>
-            <p style="position: relative; z-index: 20; pointer-events: none;">(Or drag the shapes with your finger)</p>
-            <button class="btn" style="position: relative; z-index: 20;" onclick="nextSlide(7)">One Last Thing</button>
+            <h1>Go conquer the day!</h1>
+            <p>Remember, I'm cheering for you from here. <br> Don't let anything stress you out today.</p>
+            <div style="font-size: 3rem; margin: 20px;">💑 ✨ 💌</div>
+            <p>I love you, Treasure.<br>Have the most amazing day.</p>
+            <button class="btn" onclick="confettiEffect()">Final Message</button>
         </div>
 
-        <div class="slide" id="slide7">
-            <h1>A Note for You</h1>
-            <div class="card-container" onclick="this.classList.toggle('flipped')">
-                <div class="card-inner">
-                    <div class="card-front">
-                        Tap Me ❤️
-                    </div>
-                    <div class="card-back">
-                        <p>Treasure,</p>
-                        <p>I want to tell the world how much  I want you, and scream it until everybody hears it 🥺  but lemme keep my steeze ...  I hope you have a wonderful sleep MBébé ' I love you!'. so sorry about the cold 🥶</p>
-                        <p style="font-size: 2rem;">💑</p>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <button class="btn" onclick="location.reload()">Replay</button>
-        </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // --- LOGIC ---
-
+        // --- NAVIGATION ---
         function nextSlide(slideNumber) {
-            // Hide all slides
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(s => s.classList.remove('active'));
+            const current = document.querySelector('.slide.active');
+            const next = document.getElementById('slide' + slideNumber);
+            
+            if(current) current.classList.remove('active');
+            if(next) next.classList.add('active');
 
-            // Show target slide
-            const target = document.getElementById('slide' + slideNumber);
-            target.classList.add('active');
-
-            // Trigger specific slide actions
-            if (slideNumber === 2) {
-                startTypewriter();
-            }
-            if (slideNumber === 6) {
-                initPhysics();
-            }
+            // Trigger specific slide logic
+            if (slideNumber === 4) initScratchCard();
+            if (slideNumber === 5) initPhysics();
         }
 
-        // --- TYPEWRITER EFFECT (Slide 2) ---
-        const textToType = "I wish I were there to give this to you in person, but hmmmm distance...";
-        const typeWriterElement = document.getElementById('typewriter-text');
-        const continueBtn = document.querySelector('.hidden-btn');
+        // --- SLIDE 4: SCRATCH CARD LOGIC ---
+        function initScratchCard() {
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('scratch-container');
+            const nextBtn = document.getElementById('scratch-next-btn');
 
-        function startTypewriter() {
-            typeWriterElement.innerHTML = '<span class="typing"></span>';
-            const span = typeWriterElement.querySelector('.typing');
-            let i = 0;
+            canvas.width = 300;
+            canvas.height = 150;
+
+            // Fill with "Fog" color
+            ctx.fillStyle = '#b3b3b3'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            function type() {
-                if (i < textToType.length) {
-                    span.textContent += textToType.charAt(i);
-                    i++;
-                    setTimeout(type, 50); // Speed of typing
+            // Add text on top of scratch layer
+            ctx.font = "20px Montserrat";
+            ctx.fillStyle = "#555";
+            ctx.fillText("Rub Here...", 100, 80);
+
+            let isDrawing = false;
+            let scratchedPixels = 0;
+            const totalPixels = canvas.width * canvas.height;
+
+            function scratch(x, y) {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 20, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Check progress
+                // (Optimization: only check every 10th move to save performance)
+                if (Math.random() > 0.9) checkProgress();
+            }
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                let x, y;
+                if(e.touches) {
+                    x = e.touches[0].clientX - rect.left;
+                    y = e.touches[0].clientY - rect.top;
                 } else {
-                    span.classList.remove('typing'); // Stop blinking
-                    continueBtn.style.display = 'inline-block';
+                    x = e.clientX - rect.left;
+                    y = e.clientY - rect.top;
+                }
+                return {x, y};
+            }
+
+            function checkProgress() {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let transparentPixels = 0;
+                for (let i = 3; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] === 0) transparentPixels++;
+                }
+                
+                // If 50% scratched, reveal button
+                if (transparentPixels / totalPixels > 0.4) {
+                    nextBtn.classList.remove('hidden');
+                    canvas.style.pointerEvents = 'none'; // Stop scratching
+                    canvas.style.opacity = '0'; // Fade out rest
+                    canvas.style.transition = 'opacity 1s';
                 }
             }
-            type();
+
+            // Mouse Events
+            canvas.addEventListener('mousedown', () => isDrawing = true);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const pos = getPos(e);
+                scratch(pos.x, pos.y);
+            });
+
+            // Touch Events
+            canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
+            canvas.addEventListener('touchend', () => isDrawing = false);
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDrawing) return;
+                const pos = getPos(e);
+                scratch(pos.x, pos.y);
+            });
         }
 
-        // --- CHOICE LOGIC (Slide 5) ---
-        function handleChoice(choice) {
-            const result = document.getElementById('choice-result');
-            const nextBtn = document.getElementById('next-5');
-            
-            if (choice === 'me') {
-                result.innerText = "Correct! You are the absolute best! 😍";
-            } else {
-                result.innerText = "Nice try, but nope! It's definitely YOU! 😘";
-            }
-            result.style.display = 'block';
-            nextBtn.style.display = 'inline-block';
-        }
-
-        // --- MATTER.JS PHYSICS (Slide 6) ---
+        // --- SLIDE 5: FLOATING BUBBLES (PHYSICS) ---
         function initPhysics() {
             const container = document.getElementById('physics-container');
-            // Clean up if already exists
-            container.innerHTML = '';
+            container.innerHTML = ''; // Clear previous
 
             const Engine = Matter.Engine,
                   Render = Matter.Render,
@@ -324,13 +394,13 @@
                   Bodies = Matter.Bodies,
                   Composite = Matter.Composite,
                   Mouse = Matter.Mouse,
-                  MouseConstraint = Matter.MouseConstraint,
-                  Events = Matter.Events;
+                  MouseConstraint = Matter.MouseConstraint;
 
             const engine = Engine.create();
-            const world = engine.world;
+            // INVERT GRAVITY for floating effect
+            engine.gravity.y = -0.5; 
+            engine.gravity.x = 0;
 
-            // Create renderer
             const render = Render.create({
                 element: container,
                 engine: engine,
@@ -342,69 +412,109 @@
                 }
             });
 
-            // Create Boundaries
-            const ground = Bodies.rectangle(window.innerWidth/2, window.innerHeight + 30, window.innerWidth, 60, { isStatic: true, render: { fillStyle: 'transparent' } });
-            const leftWall = Bodies.rectangle(-30, window.innerHeight/2, 60, window.innerHeight, { isStatic: true });
-            const rightWall = Bodies.rectangle(window.innerWidth + 30, window.innerHeight/2, 60, window.innerHeight, { isStatic: true });
+            // Boundaries
+            const ceiling = Bodies.rectangle(window.innerWidth/2, -50, window.innerWidth, 50, { isStatic: true });
+            const leftWall = Bodies.rectangle(-50, window.innerHeight/2, 50, window.innerHeight, { isStatic: true });
+            const rightWall = Bodies.rectangle(window.innerWidth+50, window.innerHeight/2, 50, window.innerHeight, { isStatic: true });
 
-            Composite.add(world, [ground, leftWall, rightWall]);
+            Composite.add(engine.world, [ceiling, leftWall, rightWall]);
 
-            // Create Hearts (Circles with colors)
-            const colors = ['#ff6b6b', '#ff9a9e', '#d63384', '#a18cd1'];
+            // Add Bubbles/Hearts
+            const colors = ['#ffffff', '#ffe6e6', '#ffcccc', '#ff9999'];
             
-            for (let i = 0; i < 25; i++) {
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                const size = Math.random() * 20 + 15;
-                const ball = Bodies.circle(
-                    Math.random() * window.innerWidth, 
-                    Math.random() * (window.innerHeight / 2), 
-                    size, 
-                    {
-                        restitution: 0.9, // Bouncy
-                        render: { fillStyle: randomColor }
-                    }
-                );
-                Composite.add(world, ball);
+            for (let i = 0; i < 30; i++) {
+                const size = Math.random() * 30 + 10;
+                const x = Math.random() * window.innerWidth;
+                const y = window.innerHeight + Math.random() * 200; // Start below screen
+                
+                const bubble = Bodies.circle(x, y, size, {
+                    render: { 
+                        fillStyle: colors[Math.floor(Math.random() * colors.length)],
+                        opacity: 0.8
+                    },
+                    frictionAir: 0.05 // Float slowly
+                });
+                Composite.add(engine.world, bubble);
             }
 
-            // Add Mouse Interaction
+            // Mouse Control
             const mouse = Mouse.create(render.canvas);
             const mouseConstraint = MouseConstraint.create(engine, {
                 mouse: mouse,
-                constraint: {
-                    stiffness: 0.2,
-                    render: { visible: false }
-                }
+                constraint: { stiffness: 0.2, render: { visible: false } }
             });
-            Composite.add(world, mouseConstraint);
+            Composite.add(engine.world, mouseConstraint);
             render.mouse = mouse;
-
-            // Add Device Orientation (Tilt) Support
-            window.addEventListener('deviceorientation', function(event) {
-                const gravity = engine.gravity;
-                const orientation = window.orientation; 
-
-                // Basic tilt logic
-                if (event.gamma) {
-                    gravity.x = event.gamma / 20; // Tilt left/right
-                }
-                if (event.beta) {
-                    gravity.y = (event.beta - 45) / 20; // Tilt up/down
-                }
-            });
 
             Render.run(render);
             const runner = Runner.create();
             Runner.run(runner, engine);
             
-            // Handle Resize
-            window.addEventListener('resize', () => {
-                render.canvas.width = window.innerWidth;
-                render.canvas.height = window.innerHeight;
-                Matter.Body.setPosition(ground, { x: window.innerWidth/2, y: window.innerHeight + 30 });
-                Matter.Body.setPosition(rightWall, { x: window.innerWidth + 30, y: window.innerHeight/2 });
+            // Mobile Tilt
+            window.addEventListener('deviceorientation', (e) => {
+                 if (e.gamma) engine.gravity.x = e.gamma / 30;
             });
         }
+
+     function confettiEffect() {
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FF9966', '#FF5E62', '#ffffff']
+    });
+
+    setTimeout(() => {
+        Swal.fire({
+            title: 'Hey Treasure! 💌',
+            html: `
+                <div style="font-size: 1.1rem; line-height: 1.6; color: #fff;">
+                    I really miss you <b>Abibi</b>,<br> 
+                    just want to say...<br>
+                    <span style="color: #ffe6e6; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5);">Enjoy your Day Princess!</span> 👸✨
+                </div>
+            `,
+            confirmButtonText: 'Love you too! ❤️',
+            buttonsStyling: false,
+            showClass: { popup: 'animate__animated animate__zoomIn' },
+            hideClass: { popup: 'animate__animated animate__zoomOut' },
+            background: 'transparent',
+            backdrop: `rgba(0, 0, 0, 0.2) blur(10px)`,
+            customClass: {
+                popup: 'glass-popup',
+                title: 'glass-title',
+                confirmButton: 'glass-button'
+            }
+        }).then((result) => {
+            // This runs when the button is clicked!
+            if (result.isConfirmed) {
+                createFloatingHearts();
+            }
+        });
+    }, 800);
+}
+
+// Logic to create the floating hearts
+function createFloatingHearts() {
+    const heartCount = 30; // How many hearts
+    for (let i = 0; i < heartCount; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '♥️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+
+            // Remove heart from DOM after animation ends
+            setTimeout(() => heart.remove(), 5000);
+        }, i * 100); // Staggered entry
+    }
+}
+
     </script>
 </body>
 </html>
+
