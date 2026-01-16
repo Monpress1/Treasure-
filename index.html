@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Treasure ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #a18cd1 100%);
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4a4a4a;
+            text-align: center;
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex; /* Flex to center content */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            color: #d63384;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 15px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Flower Animation */
+        .bouquet {
+            font-size: 5rem;
+            animation: bloom 2s ease-out infinite alternate;
+        }
+
+        @keyframes bloom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2) rotate(5deg); }
+        }
+
+        /* Choice Buttons */
+        .choice-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Matter JS Canvas container */
+        #physics-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Behind text */
+            pointer-events: none; /* Let clicks pass through to canvas if needed, handled by JS */
+        }
+        
+        /* Love Card Styling */
+        .card-container {
+            perspective: 1000px;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .card-front {
+            background-color: #ff6b6b;
+            color: white;
+            font-family: 'Pacifico';
+            font-size: 2rem;
+        }
+
+        .card-back {
+            background-color: white;
+            color: #333;
+            transform: rotateY(180deg);
+            padding: 20px;
+            font-size: 1rem;
+            flex-direction: column;
+        }
+
+        /* Typing Cursor */
+        .typing::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            p { font-size: 1rem; }
+            .bouquet { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <div class="slide active" id="slide1">
+            <h1>Hello Treasure</h1>
+            <p>I have a little surprise for you.</p>
+            <button class="btn" onclick="nextSlide(2)">Tap to Open</button>
+        </div>
+
+        <div class="slide" id="slide2">
+            <h1>Hey Beautiful...</h1>
+            <p id="typewriter-text"></p>
+            <button class="btn hidden-btn" style="display:none;" onclick="nextSlide(3)">Continue</button>
+        </div>
+
+        <div class="slide" id="slide3">
+            <h1>For You</h1>
+            <div class="bouquet">💐 🌹 🌸</div>
+            <p>I wish I were there to give you these in person...</p>
+            <button class="btn" onclick="nextSlide(4)">Next</button>
+        </div>
+
+        <div class="slide" id="slide4">
+            <h1>Hold on to this...</h1>
+            <div style="font-size: 4rem; margin: 10px;">💋</div>
+            <p>Until I see your beautiful lips, keep this one safe.</p>
+            <p style="font-size: 0.9rem; color: #d63384; font-weight: bold;">
+                Also, I hope that cold goes away fast! <br>
+                If it doesn't, I'm coming over to cuddle it out of you. 😤❤️
+            </p>
+            <button class="btn" onclick="nextSlide(5)">Promise?</button>
+        </div>
+
+        <div class="slide" id="slide5">
+            <h1>Quick Question</h1>
+            <p>Who is the most amazing person in the world?</p>
+            <div class="choice-container">
+                <button class="btn" onclick="handleChoice('me')">Me (Treasure)</button>
+                <button class="btn" onclick="handleChoice('bf')">monpress (My BF)</button>
+            </div>
+            <p id="choice-result" style="display:none; margin-top:15px; font-weight:bold;"></p>
+            <button class="btn" id="next-5" style="display:none; margin-top: 10px;" onclick="nextSlide(6)">Play with Hearts</button>
+        </div>
+
+        <div class="slide" id="slide6">
+            <div id="physics-container"></div>
+            <h1 style="position: relative; z-index: 20; pointer-events: none;">Tilt your phone!</h1>
+            <p style="position: relative; z-index: 20; pointer-events: none;">(Or drag the shapes with your finger)</p>
+            <button class="btn" style="position: relative; z-index: 20;" onclick="nextSlide(7)">One Last Thing</button>
+        </div>
+
+        <div class="slide" id="slide7">
+            <h1>A Note for You</h1>
+            <div class="card-container" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner">
+                    <div class="card-front">
+                        Tap Me ❤️
+                    </div>
+                    <div class="card-back">
+                        <p>Treasure,</p>
+                        <p>I want to tell the world how much  I want you, and scream it until everybody hears it 🥺  but lemme keep my steeze ...  I hope you have a wonderful sleep MBébé ' I love you!'. so sorry about the cold 🥶</p>
+                        <p style="font-size: 2rem;">💑</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button class="btn" onclick="location.reload()">Replay</button>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC ---
+
+        function nextSlide(slideNumber) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(s => s.classList.remove('active'));
+
+            // Show target slide
+            const target = document.getElementById('slide' + slideNumber);
+            target.classList.add('active');
+
+            // Trigger specific slide actions
+            if (slideNumber === 2) {
+                startTypewriter();
+            }
+            if (slideNumber === 6) {
+                initPhysics();
+            }
+        }
+
+        // --- TYPEWRITER EFFECT (Slide 2) ---
+        const textToType = "I wish I were there to give this to you in person, but hmmmm distance...";
+        const typeWriterElement = document.getElementById('typewriter-text');
+        const continueBtn = document.querySelector('.hidden-btn');
+
+        function startTypewriter() {
+            typeWriterElement.innerHTML = '<span class="typing"></span>';
+            const span = typeWriterElement.querySelector('.typing');
+            let i = 0;
+            
+            function type() {
+                if (i < textToType.length) {
+                    span.textContent += textToType.charAt(i);
+                    i++;
+                    setTimeout(type, 50); // Speed of typing
+                } else {
+                    span.classList.remove('typing'); // Stop blinking
+                    continueBtn.style.display = 'inline-block';
+                }
+            }
+            type();
+        }
+
+        // --- CHOICE LOGIC (Slide 5) ---
+        function handleChoice(choice) {
+            const result = document.getElementById('choice-result');
+            const nextBtn = document.getElementById('next-5');
+            
+            if (choice === 'me') {
+                result.innerText = "Correct! You are the absolute best! 😍";
+            } else {
+                result.innerText = "Nice try, but nope! It's definitely YOU! 😘";
+            }
+            result.style.display = 'block';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        // --- MATTER.JS PHYSICS (Slide 6) ---
+        function initPhysics() {
+            const container = document.getElementById('physics-container');
+            // Clean up if already exists
+            container.innerHTML = '';
+
+            const Engine = Matter.Engine,
+                  Render = Matter.Render,
+                  Runner = Matter.Runner,
+                  Bodies = Matter.Bodies,
+                  Composite = Matter.Composite,
+                  Mouse = Matter.Mouse,
+                  MouseConstraint = Matter.MouseConstraint,
+                  Events = Matter.Events;
+
+            const engine = Engine.create();
+            const world = engine.world;
+
+            // Create renderer
+            const render = Render.create({
+                element: container,
+                engine: engine,
+                options: {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    wireframes: false,
+                    background: 'transparent'
+                }
+            });
+
+            // Create Boundaries
+            const ground = Bodies.rectangle(window.innerWidth/2, window.innerHeight + 30, window.innerWidth, 60, { isStatic: true, render: { fillStyle: 'transparent' } });
+            const leftWall = Bodies.rectangle(-30, window.innerHeight/2, 60, window.innerHeight, { isStatic: true });
+            const rightWall = Bodies.rectangle(window.innerWidth + 30, window.innerHeight/2, 60, window.innerHeight, { isStatic: true });
+
+            Composite.add(world, [ground, leftWall, rightWall]);
+
+            // Create Hearts (Circles with colors)
+            const colors = ['#ff6b6b', '#ff9a9e', '#d63384', '#a18cd1'];
+            
+            for (let i = 0; i < 25; i++) {
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 20 + 15;
+                const ball = Bodies.circle(
+                    Math.random() * window.innerWidth, 
+                    Math.random() * (window.innerHeight / 2), 
+                    size, 
+                    {
+                        restitution: 0.9, // Bouncy
+                        render: { fillStyle: randomColor }
+                    }
+                );
+                Composite.add(world, ball);
+            }
+
+            // Add Mouse Interaction
+            const mouse = Mouse.create(render.canvas);
+            const mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: {
+                    stiffness: 0.2,
+                    render: { visible: false }
+                }
+            });
+            Composite.add(world, mouseConstraint);
+            render.mouse = mouse;
+
+            // Add Device Orientation (Tilt) Support
+            window.addEventListener('deviceorientation', function(event) {
+                const gravity = engine.gravity;
+                const orientation = window.orientation; 
+
+                // Basic tilt logic
+                if (event.gamma) {
+                    gravity.x = event.gamma / 20; // Tilt left/right
+                }
+                if (event.beta) {
+                    gravity.y = (event.beta - 45) / 20; // Tilt up/down
+                }
+            });
+
+            Render.run(render);
+            const runner = Runner.create();
+            Runner.run(runner, engine);
+            
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                render.canvas.width = window.innerWidth;
+                render.canvas.height = window.innerHeight;
+                Matter.Body.setPosition(ground, { x: window.innerWidth/2, y: window.innerHeight + 30 });
+                Matter.Body.setPosition(rightWall, { x: window.innerWidth + 30, y: window.innerHeight/2 });
+            });
+        }
+    </script>
+</body>
+</html>
