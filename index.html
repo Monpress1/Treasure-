@@ -2,519 +2,550 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Good Morning Treasure ☀️</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Goodnight Treasure 🌙</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- CORE STYLES --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+            font-family: 'Quicksand', sans-serif;
+            background: #050505;
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
+            color: #e0e0e0;
             text-align: center;
+            position: relative;
+            touch-action: none; /* Disables browser zooming/scrolling globally */
         }
 
-        #app { width: 100%; height: 100%; position: relative; }
+        .night-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+            z-index: 1;
+        }
+
+        /* Canvases */
+        #bg-canvas, #wipe-canvas, #three-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2;
+        }
+
+        /* UI Layer */
+        #app {
+            position: relative; width: 100%; height: 100%; z-index: 10;
+            pointer-events: none; /* Let touches pass through to canvas by default */
+        }
 
         .slide {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            padding: 25px;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.8s ease-in-out, transform 0.8s ease;
-            transform: scale(0.95);
-            z-index: 10;
-        }
-
-        .slide.active {
-            opacity: 1; pointer-events: all;
-            transform: scale(1);
-        }
-
-        /* TYPOGRAPHY */
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            text-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.2);
             padding: 20px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            pointer-events: none; /* Important: Slide creates visual layout but doesn't block touches unless specified */
         }
 
-        /* BUTTONS */
+        .slide.active { opacity: 1; }
+        
+        /* Only enable pointer events on buttons and interactive UI elements, NOT the whole slide container */
+        .slide.active .btn, 
+        .slide.active .heart-container,
+        .slide.active .interactive-zone {
+            pointer-events: all;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2rem, 6vw, 3rem);
+            color: #b19cd9;
+            text-shadow: 0 0 15px rgba(177, 156, 217, 0.5);
+            margin-bottom: 15px;
+            pointer-events: none; /* Ensure text doesn't block clicks */
+        }
+
+        p { font-size: 1.1rem; line-height: 1.6; max-width: 600px; margin-bottom: 25px; pointer-events: none; }
+        
+        .hint { font-size: 0.9rem; color: #ff9a9e; font-style: italic; margin-top: 10px; animation: pulse 2s infinite; pointer-events: none; }
+
         .btn {
-            padding: 15px 40px;
-            font-size: 1rem;
-            background: #fff;
-            color: #FF5E62;
-            border: none;
+            padding: 12px 30px;
+            background: rgba(177, 156, 217, 0.1);
+            color: #b19cd9;
+            border: 2px solid #b19cd9;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+            z-index: 20;
         }
+        .btn:active { transform: scale(0.95); background: #b19cd9; color: #000; }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
-            background: #ffe6e6;
-        }
-
-        /* --- SLIDE 1: SUN ANIMATION --- */
-        .sun-container {
-            width: 150px; height: 150px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 40px #FFD700, 0 0 80px #FF8C00;
-            cursor: pointer;
-            animation: pulse 2s infinite;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 3rem;
-            margin-bottom: 30px;
-            transition: transform 1s;
-        }
+        .heart-container { font-size: 4rem; cursor: pointer; transition: 0.2s; user-select: none; z-index: 20; }
+        .heart-container:active { transform: scale(0.8); }
         
-        .sun-container:active { transform: scale(5); opacity: 0; }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 40px #FFD700; }
-            50% { transform: scale(1.1); box-shadow: 0 0 60px #FFD700, 0 0 100px #FF4500; }
-            100% { transform: scale(1); box-shadow: 0 0 40px #FFD700; }
+        .progress-bar {
+            width: 200px; height: 6px; background: #333; border-radius: 10px; overflow: hidden; margin: 20px auto;
         }
+        .progress-fill { height: 100%; width: 0%; background: #b19cd9; transition: width 0.3s; }
 
-        /* --- SLIDE 3: COFFEE --- */
-        .coffee-emoji { font-size: 5rem; animation: steam 2s infinite alternate; }
-        @keyframes steam { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
-
-        /* --- SLIDE 4: SCRATCH CARD --- */
-        #scratch-container {
-            position: relative;
-            width: 300px; height: 150px;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         
-        #secret-message {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            background: white;
-            color: #FF5E62;
-            font-family: 'Dancing Script';
-            font-size: 1.8rem;
-            padding: 10px;
-            z-index: 1;
+        #hidden-message {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; font-size: 1.5rem; color: #fff; z-index: 1; text-align: center;
+            font-family: 'Pacifico', cursive;
         }
-
-        canvas#scratch-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            z-index: 2;
-            cursor: pointer;
-        }
-
-        /* --- SLIDE 5: PHYSICS --- */
-        #physics-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-        }
-        
-        .floating-text {
-            position: relative; z-index: 20; pointer-events: none;
-        }
-
-        /* HIDDEN UTILS */
-        .hidden { display: none; }
-
-        /* MOBILE ADJUSTMENTS */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            p { font-size: 0.95rem; }
-            .sun-container { width: 120px; height: 120px; }
-        }
-        /* Glassmorphism Popup Design */
-.glass-popup {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 35px !important; /* Extra smooth corners */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
-    padding: 2.5rem !important;
-}
-
-/* Elegant Script Title for Glass */
-.glass-title {
-    font-family: 'Dancing Script', cursive !important;
-    font-size: 3rem !important;
-    color: #ffffff !important;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.2) !important;
-}
-
-/* Glassmorphism Button */
-.glass-button {
-    margin-top: 20px !important;
-    background: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    color: white !important;
-    padding: 12px 40px !important;
-    border-radius: 50px !important;
-    font-size: 1rem !important;
-    font-weight: 600 !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease !important;
-}
-
-.glass-button:hover {
-    background: rgba(255, 255, 255, 0.4) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-}
-
-.glass-button:active {
-    transform: scale(0.95);
-}
-
-/* Ensure Animate.css is available for the zoom effect */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
-.floating-heart {
-    position: fixed;
-    bottom: -50px;
-    color: #FF5E62;
-    pointer-events: none;
-    z-index: 9999;
-    animation: floatUp linear forwards;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-}
-
-@keyframes floatUp {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-110vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
     </style>
 </head>
 <body>
 
+    <div class="night-glow"></div><br><br>
+    <div id="hidden-message" style="display: none;">You are the most beautiful part of my day.<br>❤️</div>
+
+    <canvas id="bg-canvas"></canvas>
+    <canvas id="wipe-canvas" style="display:none;"></canvas>
+    <div id="three-container" style="display:none;"></div>
+
     <div id="app">
-        
         <div class="slide active" id="slide1">
-            <h1>Good Morning!</h1>
-            <p>The sun is waiting for you to wake it up...</p>
-            <div class="sun-container" onclick="nextSlide(2)">☀️</div>
-            <span style="font-size: 0.8rem; opacity: 0.8;">(Tap the Sun)</span>
+            <h1>Hey Sleepyhead 🌙</h1>
+            <p>It's time to put the world away.</p>
+            <button class="btn" onclick="startJourney()">Begin the Journey</button>
         </div>
 
         <div class="slide" id="slide2">
-            <h1>Hey Treasure ❤️</h1>
-            <p>Open your eyes and smile beautiful, <br>it's a brand new day! <br><br> Even the sun is jealous of how bright you shine.</p>
-            <button class="btn" onclick="nextSlide(3)">I'm Awake!</button>
+            <h1>Breathe...</h1>
+            <div style="width: 100px; height: 100px; background: #b19cd9; border-radius: 50%; animation: breathe 4s infinite ease-in-out;"></div>
+            <style> @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.5); opacity: 0.9; } } </style>
+            <p>Sync your breathing with the light.</p>
+            <button class="btn" onclick="nextSlide(3)">I'm Relaxed</button>
         </div>
 
         <div class="slide" id="slide3">
-            <h1>Morning Fuel ☕</h1>
-            <div class="coffee-emoji">☕🥐</div>
-            <p>I can't bring you breakfast in bed (yet), so here is a virtual hug and a warm cup of love to start your day.</p>
-            <p style="font-size: 0.9rem; font-weight: bold;">I hope your day is as sweet as your voice.</p>
-            <button class="btn" onclick="nextSlide(4)">Get Surprise</button>
+            <h1>I'll Follow You</h1>
+            <p>I'm always right there with you. <br> Just as the ball follows your finger, my heart follows you</p>
+            <div class="hint">Move your finger around the screen...</div>
+            <div id="follow-counter" style="margin-top:20px; font-size: 1rem; color: #b19cd9;">Connection: 0%</div>
         </div>
 
         <div class="slide" id="slide4">
-            <h1>Rub the Screen!</h1>
-            <p>There is a secret message hidden below the fog. Rub it with your finger to reveal it.</p>
-            
-            <div id="scratch-container">
-                <div id="secret-message">You are my Favorite Notification ❤️</div>
-                <canvas id="scratch-canvas"></canvas>
-            </div>
-
-            <button class="btn hidden" id="scratch-next-btn" onclick="nextSlide(5)">See Magic</button>
+            <h1>Unlock My Heart</h1>
+            <p>It's locked tight. Only you have the combination.</p>
+            <div class="heart-container interactive-zone" onclick="tapHeart()">🔒</div>
+            <div class="progress-bar"><div class="progress-fill" id="heart-fill"></div></div>
+            <p class="hint">Tap</p>
         </div>
 
         <div class="slide" id="slide5">
-            <div id="physics-container"></div>
-            <h1 class="floating-text">Love is in the Air</h1>
-            <p class="floating-text">drag the bubbles! <br> (Or just watch them float like my heart does when I see you)</p>
-            <button class="btn" style="position: relative; z-index: 30; margin-top: 200px;" onclick="nextSlide(6)">One Last Note</button>
+            <h1>Clear Your Mind</h1>
+            <p>Pop the thoughts away.</p>
+            <p class="hint">Tap the floating bubbles.</p>
         </div>
 
         <div class="slide" id="slide6">
-            <h1>Go conquer the day!</h1>
-            <p>Remember, I'm cheering for you from here. <br> Don't let anything stress you out today.</p>
-            <div style="font-size: 3rem; margin: 20px;">💑 ✨ 💌</div>
-            <p>I love you, Treasure.<br>Have the most amazing day.</p>
-            <button class="btn" onclick="confettiEffect()">Final Message</button>
+            
+            
+            
         </div>
 
+        <div class="slide" id="slide7">
+            <h1>One Last Thing...</h1>
+            <p>Catch the kiss before it falls!</p>
+            <div id="kiss-target" class="interactive-zone" style="font-size: 4rem; position: absolute; top: -100px; cursor: pointer;">💋</div>
+        </div>
+
+        <div class="slide" id="slide8">
+            <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 20px; backdrop-filter: blur(5px);">
+                <h1>Goodnight My Love</h1>
+                <p>I love you more than all these stars. </p> <small style="color: orange;">glide around to see em all</small>
+                <button class="btn" onclick="finalAlert()">Final Message ❤️</button>
+            </div>
+        </div>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/02/07/audio_13b6329433.mp3?filename=night-ambience-17064.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        // --- NAVIGATION ---
-        function nextSlide(slideNumber) {
-            const current = document.querySelector('.slide.active');
-            const next = document.getElementById('slide' + slideNumber);
-            
-            if(current) current.classList.remove('active');
-            if(next) next.classList.add('active');
+        let currentStep = 1;
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let animationId;
+        
+        // Listeners for cleanup
+        let activeListeners = [];
 
-            // Trigger specific slide logic
-            if (slideNumber === 4) initScratchCard();
-            if (slideNumber === 5) initPhysics();
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function clearListeners() {
+            activeListeners.forEach(l => {
+                window.removeEventListener(l.type, l.handler);
+                canvas.removeEventListener(l.type, l.handler);
+            });
+            activeListeners = [];
         }
 
-        // --- SLIDE 4: SCRATCH CARD LOGIC ---
-        function initScratchCard() {
-            const canvas = document.getElementById('scratch-canvas');
-            const ctx = canvas.getContext('2d');
-            const container = document.getElementById('scratch-container');
-            const nextBtn = document.getElementById('scratch-next-btn');
-
-            canvas.width = 300;
-            canvas.height = 150;
-
-            // Fill with "Fog" color
-            ctx.fillStyle = '#b3b3b3'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        function nextSlide(n) {
+            cancelAnimationFrame(animationId);
+            clearListeners(); // Remove old event listeners
+            ctx.clearRect(0,0,width,height);
             
-            // Add text on top of scratch layer
-            ctx.font = "20px Montserrat";
-            ctx.fillStyle = "#555";
-            ctx.fillText("Rub Here...", 100, 80);
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById('slide' + n).classList.add('active');
+            currentStep = n;
 
-            let isDrawing = false;
-            let scratchedPixels = 0;
-            const totalPixels = canvas.width * canvas.height;
+            if(n === 3) initFollower();
+            if(n === 5) initBubbles();
+            if(n === 6) initWipe();
+            if(n === 7) initKissDrop();
+            if(n === 8) initGalaxy();
+        }
+
+        function startJourney() {
+            const music = document.getElementById('bg-music');
+            music.volume = 0.5;
+            music.play().catch(e => console.log("Audio needs interaction"));
+            nextSlide(2);
+        }
+
+        // --- STEP 3: FIXED FOLLOWER ---
+        function initFollower() {
+            let particles = [];
+            const mouse = { x: width/2, y: height/2 };
+            let connection = 0;
+            let lastPos = { x: 0, y: 0 }; // To track movement
+
+            // Event Handlers attached to WINDOW to catch everything
+            const moveHandler = (e) => {
+                if(e.cancelable) e.preventDefault(); // Stop scrolling on mobile
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                const y = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                mouse.x = x;
+                mouse.y = y;
+
+                // Check if actually moving
+                if(Math.abs(x - lastPos.x) > 2 || Math.abs(y - lastPos.y) > 2) {
+                    if(connection < 100) connection += 0.4; // Faster progress
+                    lastPos = { x, y };
+                }
+                
+                document.getElementById('follow-counter').innerText = `Connection: ${Math.floor(connection)}%`;
+                
+                if(connection >= 100) {
+                    clearListeners();
+                    setTimeout(() => nextSlide(4), 500);
+                }
+            };
+
+            window.addEventListener('mousemove', moveHandler);
+            window.addEventListener('touchmove', moveHandler, { passive: false });
+            activeListeners.push({ type: 'mousemove', handler: moveHandler });
+            activeListeners.push({ type: 'touchmove', handler: moveHandler });
+
+            // Create Particles
+            for(let i=0; i<30; i++) { // More particles
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 8 + 4,
+                    color: `hsl(${Math.random()*60 + 240}, 80%, 75%)`, // Purple/Blue hues
+                    speed: 0.08 + Math.random() * 0.05
+                });
+            }
+
+            function animate() {
+                // Trail effect
+                ctx.fillStyle = 'rgba(5, 5, 5, 0.25)';
+                ctx.fillRect(0, 0, width, height);
+
+                particles.forEach(p => {
+                    // Ease towards mouse
+                    p.x += (mouse.x - p.x) * p.speed;
+                    p.y += (mouse.y - p.y) * p.speed;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+                
+                if(currentStep === 3) animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // --- STEP 4: HEART ---
+        let taps = 0;
+        function tapHeart() {
+            taps++;
+            const fill = document.getElementById('heart-fill');
+            const lock = document.querySelector('.heart-container');
+            
+            fill.style.width = (taps * 20) + '%';
+            lock.style.transform = `scale(${1 + taps/10})`;
+            setTimeout(() => lock.style.transform = 'scale(1)', 100);
+
+            if(taps >= 5) {
+                lock.innerText = '❤️';
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                setTimeout(() => nextSlide(5), 1500);
+            }
+        }
+
+        // --- STEP 5: BUBBLES ---
+        function initBubbles() {
+            let bubbles = [];
+            let popped = 0;
+            
+            // Create bubbles
+            for(let i=0; i<10; i++) {
+                bubbles.push({
+                    x: Math.random() * width,
+                    y: height + Math.random() * 200,
+                    r: 30 + Math.random() * 20,
+                    speed: 1.5 + Math.random() * 2,
+                    active: true
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0,0,width,height);
+                bubbles.forEach(b => {
+                    if(!b.active) return;
+                    b.y -= b.speed;
+                    if(b.y < -50) b.y = height + 50;
+
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+                    ctx.strokeStyle = '#b19cd9';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = 'rgba(177, 156, 217, 0.2)';
+                    ctx.fill();
+                });
+                if(currentStep === 5) animationId = requestAnimationFrame(animate);
+            }
+            animate();
+
+            const popHandler = (e) => {
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                const y = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                bubbles.forEach(b => {
+                    if(!b.active) return;
+                    const dist = Math.hypot(x - b.x, y - b.y);
+                    if(dist < b.r + 30) { // Larger hit area
+                        b.active = false;
+                        popped++;
+                        confetti({ particleCount: 10, spread: 30, origin: { x: x/width, y: y/height } });
+                        if(popped >= 6) {
+                            clearListeners();
+                            setTimeout(() => nextSlide(6), 500);
+                        }
+                    }
+                });
+            };
+            window.addEventListener('mousedown', popHandler);
+            window.addEventListener('touchstart', popHandler);
+            activeListeners.push({ type: 'mousedown', handler: popHandler });
+            activeListeners.push({ type: 'touchstart', handler: popHandler });
+        }
+
+        // --- STEP 6: WIPE ---
+        function initWipe() {
+            const wCanvas = document.getElementById('wipe-canvas');
+            const wCtx = wCanvas.getContext('2d');
+            const msg = document.getElementById('hidden-message');
+            
+            wCanvas.style.display = 'block';
+            msg.style.display = 'block';
+            wCanvas.width = width;
+            wCanvas.height = height;
+
+            wCtx.fillStyle = '#b19cd9';
+            wCtx.fillRect(0,0,width,height);
+            
+            let clearedPixels = 0;
 
             function scratch(x, y) {
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(x, y, 20, 0, Math.PI * 2);
-                ctx.fill();
+                wCtx.globalCompositeOperation = 'destination-out';
+                wCtx.beginPath();
+                wCtx.arc(x, y, 40, 0, Math.PI * 2);
+                wCtx.fill();
+                clearedPixels++;
                 
-                // Check progress
-                // (Optimization: only check every 10th move to save performance)
-                if (Math.random() > 0.9) checkProgress();
-            }
-
-            function getPos(e) {
-                const rect = canvas.getBoundingClientRect();
-                let x, y;
-                if(e.touches) {
-                    x = e.touches[0].clientX - rect.left;
-                    y = e.touches[0].clientY - rect.top;
-                } else {
-                    x = e.clientX - rect.left;
-                    y = e.clientY - rect.top;
-                }
-                return {x, y};
-            }
-
-            function checkProgress() {
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                let transparentPixels = 0;
-                for (let i = 3; i < imageData.data.length; i += 4) {
-                    if (imageData.data[i] === 0) transparentPixels++;
-                }
-                
-                // If 50% scratched, reveal button
-                if (transparentPixels / totalPixels > 0.4) {
-                    nextBtn.classList.remove('hidden');
-                    canvas.style.pointerEvents = 'none'; // Stop scratching
-                    canvas.style.opacity = '0'; // Fade out rest
-                    canvas.style.transition = 'opacity 1s';
+                if(clearedPixels > 300) {
+                    clearListeners();
+                    wCanvas.style.transition = 'opacity 1s';
+                    wCanvas.style.opacity = '0';
+                    setTimeout(() => {
+                        wCanvas.style.display = 'none';
+                        msg.style.display = 'none';
+                        nextSlide(7);
+                    }, 4000);
                 }
             }
 
-            // Mouse Events
-            canvas.addEventListener('mousedown', () => isDrawing = true);
-            canvas.addEventListener('mouseup', () => isDrawing = false);
-            canvas.addEventListener('mousemove', (e) => {
-                if (!isDrawing) return;
-                const pos = getPos(e);
-                scratch(pos.x, pos.y);
-            });
+            const touchHandler = e => {
+                e.preventDefault(); // Stop scroll
+                const touches = e.changedTouches;
+                for (let i = 0; i < touches.length; i++) {
+                    scratch(touches[i].clientX, touches[i].clientY);
+                }
+            };
+            const mouseHandler = e => {
+                if(e.buttons === 1) scratch(e.clientX, e.clientY);
+            };
 
-            // Touch Events
-            canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
-            canvas.addEventListener('touchend', () => isDrawing = false);
-            canvas.addEventListener('touchmove', (e) => {
-                if (!isDrawing) return;
-                const pos = getPos(e);
-                scratch(pos.x, pos.y);
-            });
+            wCanvas.addEventListener('touchmove', touchHandler, { passive: false });
+            wCanvas.addEventListener('mousemove', mouseHandler);
+            activeListeners.push({ type: 'touchmove', handler: touchHandler });
+            activeListeners.push({ type: 'mousemove', handler: mouseHandler });
         }
 
-        // --- SLIDE 5: FLOATING BUBBLES (PHYSICS) ---
-        function initPhysics() {
-            const container = document.getElementById('physics-container');
-            container.innerHTML = ''; // Clear previous
+        // --- STEP 7: KISS ---
+        function initKissDrop() {
+            const kiss = document.getElementById('kiss-target');
+            kiss.style.top = '-100px';
+            kiss.style.pointerEvents = 'all'; // Ensure clickable
+            
+            let dropPos = -100;
+            let speed = 3;
+            let xPos = Math.random() * (width - 100) + 50;
+            kiss.style.left = xPos + 'px';
 
-            const Engine = Matter.Engine,
-                  Render = Matter.Render,
-                  Runner = Matter.Runner,
-                  Bodies = Matter.Bodies,
-                  Composite = Matter.Composite,
-                  Mouse = Matter.Mouse,
-                  MouseConstraint = Matter.MouseConstraint;
-
-            const engine = Engine.create();
-            // INVERT GRAVITY for floating effect
-            engine.gravity.y = -0.5; 
-            engine.gravity.x = 0;
-
-            const render = Render.create({
-                element: container,
-                engine: engine,
-                options: {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    wireframes: false,
-                    background: 'transparent'
+            function drop() {
+                dropPos += speed;
+                kiss.style.top = dropPos + 'px';
+                if(dropPos > height) {
+                    dropPos = -100;
+                    xPos = Math.random() * (width - 100) + 50;
+                    kiss.style.left = xPos + 'px';
                 }
-            });
-
-            // Boundaries
-            const ceiling = Bodies.rectangle(window.innerWidth/2, -50, window.innerWidth, 50, { isStatic: true });
-            const leftWall = Bodies.rectangle(-50, window.innerHeight/2, 50, window.innerHeight, { isStatic: true });
-            const rightWall = Bodies.rectangle(window.innerWidth+50, window.innerHeight/2, 50, window.innerHeight, { isStatic: true });
-
-            Composite.add(engine.world, [ceiling, leftWall, rightWall]);
-
-            // Add Bubbles/Hearts
-            const colors = ['#ffffff', '#ffe6e6', '#ffcccc', '#ff9999'];
-            
-            for (let i = 0; i < 30; i++) {
-                const size = Math.random() * 30 + 10;
-                const x = Math.random() * window.innerWidth;
-                const y = window.innerHeight + Math.random() * 200; // Start below screen
-                
-                const bubble = Bodies.circle(x, y, size, {
-                    render: { 
-                        fillStyle: colors[Math.floor(Math.random() * colors.length)],
-                        opacity: 0.8
-                    },
-                    frictionAir: 0.05 // Float slowly
-                });
-                Composite.add(engine.world, bubble);
+                if(currentStep === 7) requestAnimationFrame(drop);
             }
+            drop();
 
-            // Mouse Control
-            const mouse = Mouse.create(render.canvas);
-            const mouseConstraint = MouseConstraint.create(engine, {
-                mouse: mouse,
-                constraint: { stiffness: 0.2, render: { visible: false } }
-            });
-            Composite.add(engine.world, mouseConstraint);
-            render.mouse = mouse;
-
-            Render.run(render);
-            const runner = Runner.create();
-            Runner.run(runner, engine);
-            
-            // Mobile Tilt
-            window.addEventListener('deviceorientation', (e) => {
-                 if (e.gamma) engine.gravity.x = e.gamma / 30;
-            });
+            kiss.onclick = () => {
+                confetti({ shapes: ['heart'], colors: ['#FF0000', '#FF69B4'] });
+                nextSlide(8);
+            };
         }
 
-     function confettiEffect() {
-    confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#FF9966', '#FF5E62', '#ffffff']
-    });
+                // --- STEP 8: GALAXY (Now Interactive! 👆) ---
+        function initGalaxy() {
+            const container = document.getElementById('three-container');
+            container.style.display = 'block';
+            
+            // Setup Three.js
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(width, height);
+            container.innerHTML = ''; // Clear previous if any
+            container.appendChild(renderer.domElement);
 
-    setTimeout(() => {
-        Swal.fire({
-            title: 'Hey Treasure! 💌',
-            html: `
-                <div style="font-size: 1.1rem; line-height: 1.6; color: #fff;">
-                    I really miss you <b>Abibi</b>,<br> 
-                    just want to say...<br>
-                    <span style="color: #ffe6e6; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.5);">Enjoy your Day Princess!</span> 👸✨
-                </div>
-            `,
-            confirmButtonText: 'Love you too! ❤️',
-            buttonsStyling: false,
-            showClass: { popup: 'animate__animated animate__zoomIn' },
-            hideClass: { popup: 'animate__animated animate__zoomOut' },
-            background: 'transparent',
-            backdrop: `rgba(0, 0, 0, 0.2) blur(10px)`,
-            customClass: {
-                popup: 'glass-popup',
-                title: 'glass-title',
-                confirmButton: 'glass-button'
+            // Create Stars
+            const starGeo = new THREE.BufferGeometry();
+            const count = 3000;
+            const pos = new Float32Array(count * 3);
+            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 20;
+            starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            
+            const mat = new THREE.PointsMaterial({ size: 0.03, color: 0xffffff, transparent: true, opacity: 0.8 });
+            const mesh = new THREE.Points(starGeo, mat);
+            scene.add(mesh);
+            camera.position.z = 5;
+
+            // --- INTERACTION LOGIC ---
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            const startDrag = (e) => {
+                isDragging = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                previousMousePosition = { x: clientX, y: clientY };
+            };
+
+            const drag = (e) => {
+                if (!isDragging) return;
+                
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                const deltaMove = {
+                    x: clientX - previousMousePosition.x,
+                    y: clientY - previousMousePosition.y
+                };
+
+                // Rotate the galaxy based on finger movement
+                mesh.rotation.y += deltaMove.x * 0.005;
+                mesh.rotation.x += deltaMove.y * 0.005;
+
+                previousMousePosition = { x: clientX, y: clientY };
+            };
+
+            const stopDrag = () => {
+                isDragging = false;
+            };
+
+            // Add Listeners
+            const canvas = renderer.domElement;
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mousemove', drag);
+            canvas.addEventListener('mouseup', stopDrag);
+            
+            canvas.addEventListener('touchstart', startDrag, { passive: false });
+            canvas.addEventListener('touchmove', drag, { passive: false });
+            canvas.addEventListener('touchend', stopDrag);
+
+            // Add to cleanup list (so it doesn't break if we restart)
+            activeListeners.push({ type: 'touchstart', handler: startDrag });
+            activeListeners.push({ type: 'touchmove', handler: drag });
+
+            function animate() {
+                // Keep a tiny bit of auto-rotation if she isn't touching it
+                if (!isDragging) {
+                    mesh.rotation.y += 0.001;
+                    mesh.rotation.x += 0.0005;
+                }
+                
+                renderer.render(scene, camera);
+                if(currentStep === 8) requestAnimationFrame(animate);
             }
-        }).then((result) => {
-            // This runs when the button is clicked!
-            if (result.isConfirmed) {
-                createFloatingHearts();
-            }
-        });
-    }, 800);
-}
+            animate();
+        }
 
-// Logic to create the floating hearts
-function createFloatingHearts() {
-    const heartCount = 30; // How many hearts
-    for (let i = 0; i < heartCount; i++) {
-        setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.innerHTML = '♥️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            heart.style.opacity = Math.random();
-            document.body.appendChild(heart);
-
-            // Remove heart from DOM after animation ends
-            setTimeout(() => heart.remove(), 5000);
-        }, i * 100); // Staggered entry
-    }
-}
-
+        function finalAlert() {
+            Swal.fire({
+                title: 'Goodnight Treasure',
+                text: 'its so cold outside 🥶, I wish I could  be under the same sheet with you, Bite you a little on your shoulder and cross legs under the sheets. but alas, GOODNIGHT ABIBI',
+                confirmButtonText: 'Night Night 💤',
+                background: '#1a1a2e',
+                color: '#fff',
+                confirmButtonColor: '#b19cd9'
+            });
+        }
     </script>
 </body>
 </html>
-
