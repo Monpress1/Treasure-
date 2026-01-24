@@ -3,549 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Goodnight Treasure 🌙</title>
+    <title>Our Path Forward | A Love Letter</title>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700&family=Playfair+Display:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg: #050505;
+            --card-bg: rgba(15, 15, 20, 0.6);
+            --accent: #bb86fc; 
+            --gold: #ffd700;
+            --text-main: #e0e0e0;
+            --text-dim: #cccccc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
         
         body {
-            font-family: 'Quicksand', sans-serif;
-            background: #050505;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            color: #e0e0e0;
-            text-align: center;
-            position: relative;
-            touch-action: none; /* Disables browser zooming/scrolling globally */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            height: 100vh; width: 100vw;
+            overflow: hidden; color: var(--text-main);
+            touch-action: none;
         }
 
-        .night-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
-            z-index: 1;
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
         }
 
-        /* Canvases */
-        #bg-canvas, #wipe-canvas, #three-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2;
-        }
-
-        /* UI Layer */
-        #app {
-            position: relative; width: 100%; height: 100%; z-index: 10;
-            pointer-events: none; /* Let touches pass through to canvas by default */
+        .app-interface {
+            position: relative; z-index: 10;
+            height: 100%; width: 100%;
+            display: flex; flex-direction: column;
+            pointer-events: none; 
         }
 
         .slide {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-            pointer-events: none; /* Important: Slide creates visual layout but doesn't block touches unless specified */
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 30px; opacity: 0; visibility: hidden;
+            text-align: center; transition: transform 0.8s ease;
         }
 
-        .slide.active { opacity: 1; }
-        
-        /* Only enable pointer events on buttons and interactive UI elements, NOT the whole slide container */
-        .slide.active .btn, 
-        .slide.active .heart-container,
-        .slide.active .interactive-zone {
-            pointer-events: all;
+        .slide.active { opacity: 1; visibility: visible; }
+
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px;
+            padding: 40px 25px;
+            width: 100%; max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+            pointer-events: none;
         }
 
-        h1 {
-            font-family: 'Pacifico', cursive;
-            font-size: clamp(2rem, 6vw, 3rem);
-            color: #b19cd9;
-            text-shadow: 0 0 15px rgba(177, 156, 217, 0.5);
-            margin-bottom: 15px;
-            pointer-events: none; /* Ensure text doesn't block clicks */
+        .glass-panel button { pointer-events: auto; }
+
+        h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2rem; font-weight: 700; font-style: italic;
+            margin-bottom: 15px; color: var(--accent);
+            text-shadow: 0 0 20px rgba(187, 134, 252, 0.3);
         }
 
-        p { font-size: 1.1rem; line-height: 1.6; max-width: 600px; margin-bottom: 25px; pointer-events: none; }
-        
-        .hint { font-size: 0.9rem; color: #ff9a9e; font-style: italic; margin-top: 10px; animation: pulse 2s infinite; pointer-events: none; }
+        p { font-size: 1rem; line-height: 1.7; font-weight: 400; margin-bottom: 25px; color: var(--text-dim); }
 
-        .btn {
-            padding: 12px 30px;
-            background: rgba(177, 156, 217, 0.1);
-            color: #b19cd9;
-            border: 2px solid #b19cd9;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            backdrop-filter: blur(5px);
+        .btn-action {
+            background: linear-gradient(135deg, #6200ee, #bb86fc);
+            border: none; padding: 15px 40px; border-radius: 50px;
+            color: white; cursor: pointer; font-size: 0.9rem;
+            font-weight: 700; letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(98, 0, 238, 0.3);
+            transition: 0.3s ease;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-action:active { transform: scale(0.95); }
+
+        .btn-outline {
+            background: rgba(0,0,0,0.3); border: 1px solid var(--accent);
+            color: var(--accent); padding: 12px 30px; border-radius: 50px;
+            cursor: pointer; font-weight: 600; margin-top: 10px;
             transition: 0.3s;
-            z-index: 20;
         }
-        .btn:active { transform: scale(0.95); background: #b19cd9; color: #000; }
 
-        .heart-container { font-size: 4rem; cursor: pointer; transition: 0.2s; user-select: none; z-index: 20; }
-        .heart-container:active { transform: scale(0.8); }
-        
-        .progress-bar {
-            width: 200px; height: 6px; background: #333; border-radius: 10px; overflow: hidden; margin: 20px auto;
+        .icon-box {
+            font-size: 2.5rem; color: var(--gold); margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
         }
-        .progress-fill { height: 100%; width: 0%; background: #b19cd9; transition: width 0.3s; }
 
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-        
-        #hidden-message {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80%; font-size: 1.5rem; color: #fff; z-index: 1; text-align: center;
-            font-family: 'Pacifico', cursive;
+        #hud {
+            position: absolute; bottom: 40px; width: 100%; text-align: center;
+            color: var(--accent); font-size: 0.8rem; letter-spacing: 3px;
+            text-transform: uppercase; pointer-events: none; opacity: 0.6;
+            animation: pulse 2s infinite;
         }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        
+        .together-btn { background: linear-gradient(135deg, #11998e, #38ef7d) !important; box-shadow: 0 10px 20px rgba(56, 239, 125, 0.3) !important; }
+
+        #final-message {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: all 1s ease;
+        }
+        #final-message.visible { opacity: 1; visibility: visible; pointer-events: auto; }
+        
+        .message-card {
+            background: #1a1a1a; padding: 40px; border-radius: 20px;
+            border: 1px solid var(--gold); text-align: center;
+            max-width: 90%; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #final-message.visible .message-card { transform: scale(1); }
+        .heart-pulse { color: #ff4d4d; font-size: 3rem; animation: heartbeat 1.5s infinite; margin-bottom: 20px; }
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div class="night-glow"></div><br><br>
-    <div id="hidden-message" style="display: none;">You are the most beautiful part of my day.<br>❤️</div>
-
     <canvas id="bg-canvas"></canvas>
-    <canvas id="wipe-canvas" style="display:none;"></canvas>
-    <div id="three-container" style="display:none;"></div>
 
-    <div id="app">
+    <div id="final-message">
+        <div class="message-card">
+            <div class="heart-pulse"><i class="fa-solid fa-heart"></i></div>
+            <h2 style="font-family: 'Playfair Display'; color: white; margin-bottom: 15px;">I Love You</h2>
+            <p style="color: #ccc;">Thank You Babe.<br>Let's make this ride smooth, together 😘.</p>
+            <button class="btn-action" onclick="location.reload()">Replay</button>
+        </div>
+    </div>
+
+    <div class="app-interface">
         <div class="slide active" id="slide1">
-            <h1>Hey Sleepyhead 🌙</h1>
-            <p>It's time to put the world away.</p>
-            <button class="btn" onclick="startJourney()">Begin the Journey</button>
+            <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-envelope-open-text"></i></div>
+                <h1>A Love Letter</h1>
+                <p>This isn't just a message. It's a space I built for us. From this moment on, I want us to choose peace over pride and love over friction.</p>
+                <button class="btn-action" onclick="toSlide(2)">Begin Our Journey <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
         </div>
 
         <div class="slide" id="slide2">
-            <h1>Breathe...</h1>
-            <div style="width: 100px; height: 100px; background: #b19cd9; border-radius: 50%; animation: breathe 4s infinite ease-in-out;"></div>
-            <style> @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.5); opacity: 0.9; } } </style>
-            <p>Sync your breathing with the light.</p>
-            <button class="btn" onclick="nextSlide(3)">I'm Relaxed</button>
+            <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-wind"></i></div>
+                <h1>The Silk Ribbon</h1>
+                <p>Our connection is a thread. Sometimes it tangles, but it never breaks. Guide the ribbon with your heart.</p>
+                <button class="btn-outline" onclick="toSlide(3)">Continue</button>
+            </div>
+            <div id="hud">Move your finger to guide</div>
         </div>
 
         <div class="slide" id="slide3">
-            <h1>I'll Follow You</h1>
-            <p>I'm always right there with you. <br> Just as the ball follows your finger, my heart follows you</p>
-            <div class="hint">Move your finger around the screen...</div>
-            <div id="follow-counter" style="margin-top:20px; font-size: 1rem; color: #b19cd9;">Connection: 0%</div>
+            <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-droplet"></i></div>
+                <h1>The Wishing Well</h1>
+                <p>Every ripple you create clears the surface of our history. Let the arguments sink into the deep dark water.</p>
+                <button class="btn-outline" onclick="toSlide(4)">Release Tension</button>
+            </div>
+            <div id="hud">Tap the water</div>
         </div>
 
         <div class="slide" id="slide4">
-            <h1>Unlock My Heart</h1>
-            <p>It's locked tight. Only you have the combination.</p>
-            <div class="heart-container interactive-zone" onclick="tapHeart()">🔒</div>
-            <div class="progress-bar"><div class="progress-fill" id="heart-fill"></div></div>
-            <p class="hint">Tap</p>
+            <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-leaf"></i></div>
+                <h1>Raking the Path</h1>
+                <p>I wish for a smoother ride for us. Help me draw a new trail in the sand, where every step is softer than the last.</p>
+                <button class="btn-outline" onclick="toSlide(5)">Design Our Future</button>
+            </div>
+            <div id="hud">Draw on the sand</div>
         </div>
 
         <div class="slide" id="slide5">
-            <h1>Clear Your Mind</h1>
-            <p>Pop the thoughts away.</p>
-            <p class="hint">Tap the floating bubbles.</p>
+          <br><br><br><hr>  <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-gem"></i></div>
+                <h1>The Crystal Forge</h1>
+                <p>We are like this crystal—strong but fractured. <strong>Hold down</strong> on the screen to warm the glass and heal the cracks.</p>
+                <button class="btn-outline" onclick="toSlide(6)">Heal Us</button>
+            </div>
+            <div id="hud">Hold screen to Forge</div>
         </div>
 
         <div class="slide" id="slide6">
-            
-            
-            
+            <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-fire-glow"></i></div>
+                <h1>Our Intentions</h1>
+                <p>Less arguing, more loving. Release these lights to the universe as a promise to try harder, together.</p>
+                <button class="btn-outline" onclick="toSlide(7)">Last One...</button>
+            </div>
+            <div id="hud">Tap lights to release</div>
         </div>
 
         <div class="slide" id="slide7">
-            <h1>One Last Thing...</h1>
-            <p>Catch the kiss before it falls!</p>
-            <div id="kiss-target" class="interactive-zone" style="font-size: 4rem; position: absolute; top: -100px; cursor: pointer;">💋</div>
-        </div>
-
-        <div class="slide" id="slide8">
-            <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 20px; backdrop-filter: blur(5px);">
-                <h1>Goodnight My Love</h1>
-                <p>I love you more than all these stars. </p> <small style="color: orange;">glide around to see em all</small>
-                <button class="btn" onclick="finalAlert()">Final Message ❤️</button>
+            <div class="glass-panel">
+                <div class="icon-box"><i class="fa-solid fa-hands-holding-heart"></i></div>
+                <h1>A Smoother Ride</h1>
+                <p>I want us to work on ourselves together. No more "me vs you," just "us vs the problem."<br><br><strong>Can you do that for me?</strong></p>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="btn-action together-btn" onclick="finalPromise()"><i class="fa-solid fa-handshake-angle"></i> Let's do it together</button>
+                    <button class="btn-outline" onclick="finalPromise()"><i class="fa-solid fa-heart"></i> I promise</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <audio id="bg-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/02/07/audio_13b6329433.mp3?filename=night-ambience-17064.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
-        let currentStep = 1;
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let animationId;
-        
-        // Listeners for cleanup
-        let activeListeners = [];
+        /**
+         * 1. this code was made by Eli Monpress jan 23, 2026, you can take apart the code to build something else, you are free to do so, anyways, I have used few js libraries, mostly three.js.
+         
+         {{{{🤙🎉contact me on 07077575301 WA for more info🎉}}}}
+         */
+        let scene, camera, renderer, mouse, raycaster;
+        let currentSceneObjects = [];
+        let activeSlide = 1;
+        let clock = new THREE.Clock();
+        let isHolding = false;
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function clearListeners() {
-            activeListeners.forEach(l => {
-                window.removeEventListener(l.type, l.handler);
-                canvas.removeEventListener(l.type, l.handler);
-            });
-            activeListeners = [];
-        }
-
-        function nextSlide(n) {
-            cancelAnimationFrame(animationId);
-            clearListeners(); // Remove old event listeners
-            ctx.clearRect(0,0,width,height);
+        function initCore() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050505, 0.15);
             
-            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-            document.getElementById('slide' + n).classList.add('active');
-            currentStep = n;
-
-            if(n === 3) initFollower();
-            if(n === 5) initBubbles();
-            if(n === 6) initWipe();
-            if(n === 7) initKissDrop();
-            if(n === 8) initGalaxy();
-        }
-
-        function startJourney() {
-            const music = document.getElementById('bg-music');
-            music.volume = 0.5;
-            music.play().catch(e => console.log("Audio needs interaction"));
-            nextSlide(2);
-        }
-
-        // --- STEP 3: FIXED FOLLOWER ---
-        function initFollower() {
-            let particles = [];
-            const mouse = { x: width/2, y: height/2 };
-            let connection = 0;
-            let lastPos = { x: 0, y: 0 }; // To track movement
-
-            // Event Handlers attached to WINDOW to catch everything
-            const moveHandler = (e) => {
-                if(e.cancelable) e.preventDefault(); // Stop scrolling on mobile
-                const x = e.touches ? e.touches[0].clientX : e.clientX;
-                const y = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                mouse.x = x;
-                mouse.y = y;
-
-                // Check if actually moving
-                if(Math.abs(x - lastPos.x) > 2 || Math.abs(y - lastPos.y) > 2) {
-                    if(connection < 100) connection += 0.4; // Faster progress
-                    lastPos = { x, y };
-                }
-                
-                document.getElementById('follow-counter').innerText = `Connection: ${Math.floor(connection)}%`;
-                
-                if(connection >= 100) {
-                    clearListeners();
-                    setTimeout(() => nextSlide(4), 500);
-                }
-            };
-
-            window.addEventListener('mousemove', moveHandler);
-            window.addEventListener('touchmove', moveHandler, { passive: false });
-            activeListeners.push({ type: 'mousemove', handler: moveHandler });
-            activeListeners.push({ type: 'touchmove', handler: moveHandler });
-
-            // Create Particles
-            for(let i=0; i<30; i++) { // More particles
-                particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    radius: Math.random() * 8 + 4,
-                    color: `hsl(${Math.random()*60 + 240}, 80%, 75%)`, // Purple/Blue hues
-                    speed: 0.08 + Math.random() * 0.05
-                });
-            }
-
-            function animate() {
-                // Trail effect
-                ctx.fillStyle = 'rgba(5, 5, 5, 0.25)';
-                ctx.fillRect(0, 0, width, height);
-
-                particles.forEach(p => {
-                    // Ease towards mouse
-                    p.x += (mouse.x - p.x) * p.speed;
-                    p.y += (mouse.y - p.y) * p.speed;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
-                    ctx.fillStyle = p.color;
-                    ctx.fill();
-                });
-                
-                if(currentStep === 3) animationId = requestAnimationFrame(animate);
-            }
-            animate();
-        }
-
-        // --- STEP 4: HEART ---
-        let taps = 0;
-        function tapHeart() {
-            taps++;
-            const fill = document.getElementById('heart-fill');
-            const lock = document.querySelector('.heart-container');
-            
-            fill.style.width = (taps * 20) + '%';
-            lock.style.transform = `scale(${1 + taps/10})`;
-            setTimeout(() => lock.style.transform = 'scale(1)', 100);
-
-            if(taps >= 5) {
-                lock.innerText = '❤️';
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                setTimeout(() => nextSlide(5), 1500);
-            }
-        }
-
-        // --- STEP 5: BUBBLES ---
-        function initBubbles() {
-            let bubbles = [];
-            let popped = 0;
-            
-            // Create bubbles
-            for(let i=0; i<10; i++) {
-                bubbles.push({
-                    x: Math.random() * width,
-                    y: height + Math.random() * 200,
-                    r: 30 + Math.random() * 20,
-                    speed: 1.5 + Math.random() * 2,
-                    active: true
-                });
-            }
-
-            function animate() {
-                ctx.clearRect(0,0,width,height);
-                bubbles.forEach(b => {
-                    if(!b.active) return;
-                    b.y -= b.speed;
-                    if(b.y < -50) b.y = height + 50;
-
-                    ctx.beginPath();
-                    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
-                    ctx.strokeStyle = '#b19cd9';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    ctx.fillStyle = 'rgba(177, 156, 217, 0.2)';
-                    ctx.fill();
-                });
-                if(currentStep === 5) animationId = requestAnimationFrame(animate);
-            }
-            animate();
-
-            const popHandler = (e) => {
-                const x = e.touches ? e.touches[0].clientX : e.clientX;
-                const y = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                bubbles.forEach(b => {
-                    if(!b.active) return;
-                    const dist = Math.hypot(x - b.x, y - b.y);
-                    if(dist < b.r + 30) { // Larger hit area
-                        b.active = false;
-                        popped++;
-                        confetti({ particleCount: 10, spread: 30, origin: { x: x/width, y: y/height } });
-                        if(popped >= 6) {
-                            clearListeners();
-                            setTimeout(() => nextSlide(6), 500);
-                        }
-                    }
-                });
-            };
-            window.addEventListener('mousedown', popHandler);
-            window.addEventListener('touchstart', popHandler);
-            activeListeners.push({ type: 'mousedown', handler: popHandler });
-            activeListeners.push({ type: 'touchstart', handler: popHandler });
-        }
-
-        // --- STEP 6: WIPE ---
-        function initWipe() {
-            const wCanvas = document.getElementById('wipe-canvas');
-            const wCtx = wCanvas.getContext('2d');
-            const msg = document.getElementById('hidden-message');
-            
-            wCanvas.style.display = 'block';
-            msg.style.display = 'block';
-            wCanvas.width = width;
-            wCanvas.height = height;
-
-            wCtx.fillStyle = '#b19cd9';
-            wCtx.fillRect(0,0,width,height);
-            
-            let clearedPixels = 0;
-
-            function scratch(x, y) {
-                wCtx.globalCompositeOperation = 'destination-out';
-                wCtx.beginPath();
-                wCtx.arc(x, y, 40, 0, Math.PI * 2);
-                wCtx.fill();
-                clearedPixels++;
-                
-                if(clearedPixels > 300) {
-                    clearListeners();
-                    wCanvas.style.transition = 'opacity 1s';
-                    wCanvas.style.opacity = '0';
-                    setTimeout(() => {
-                        wCanvas.style.display = 'none';
-                        msg.style.display = 'none';
-                        nextSlide(7);
-                    }, 4000);
-                }
-            }
-
-            const touchHandler = e => {
-                e.preventDefault(); // Stop scroll
-                const touches = e.changedTouches;
-                for (let i = 0; i < touches.length; i++) {
-                    scratch(touches[i].clientX, touches[i].clientY);
-                }
-            };
-            const mouseHandler = e => {
-                if(e.buttons === 1) scratch(e.clientX, e.clientY);
-            };
-
-            wCanvas.addEventListener('touchmove', touchHandler, { passive: false });
-            wCanvas.addEventListener('mousemove', mouseHandler);
-            activeListeners.push({ type: 'touchmove', handler: touchHandler });
-            activeListeners.push({ type: 'mousemove', handler: mouseHandler });
-        }
-
-        // --- STEP 7: KISS ---
-        function initKissDrop() {
-            const kiss = document.getElementById('kiss-target');
-            kiss.style.top = '-100px';
-            kiss.style.pointerEvents = 'all'; // Ensure clickable
-            
-            let dropPos = -100;
-            let speed = 3;
-            let xPos = Math.random() * (width - 100) + 50;
-            kiss.style.left = xPos + 'px';
-
-            function drop() {
-                dropPos += speed;
-                kiss.style.top = dropPos + 'px';
-                if(dropPos > height) {
-                    dropPos = -100;
-                    xPos = Math.random() * (width - 100) + 50;
-                    kiss.style.left = xPos + 'px';
-                }
-                if(currentStep === 7) requestAnimationFrame(drop);
-            }
-            drop();
-
-            kiss.onclick = () => {
-                confetti({ shapes: ['heart'], colors: ['#FF0000', '#FF69B4'] });
-                nextSlide(8);
-            };
-        }
-
-                // --- STEP 8: GALAXY (Now Interactive! 👆) ---
-        function initGalaxy() {
-            const container = document.getElementById('three-container');
-            container.style.display = 'block';
-            
-            // Setup Three.js
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
-            renderer.setSize(width, height);
-            container.innerHTML = ''; // Clear previous if any
-            container.appendChild(renderer.domElement);
-
-            // Create Stars
-            const starGeo = new THREE.BufferGeometry();
-            const count = 3000;
-            const pos = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 20;
-            starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            
-            const mat = new THREE.PointsMaterial({ size: 0.03, color: 0xffffff, transparent: true, opacity: 0.8 });
-            const mesh = new THREE.Points(starGeo, mat);
-            scene.add(mesh);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 5;
 
-            // --- INTERACTION LOGIC ---
-            let isDragging = false;
-            let previousMousePosition = { x: 0, y: 0 };
-
-            const startDrag = (e) => {
-                isDragging = true;
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                previousMousePosition = { x: clientX, y: clientY };
-            };
-
-            const drag = (e) => {
-                if (!isDragging) return;
-                
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-                const deltaMove = {
-                    x: clientX - previousMousePosition.x,
-                    y: clientY - previousMousePosition.y
-                };
-
-                // Rotate the galaxy based on finger movement
-                mesh.rotation.y += deltaMove.x * 0.005;
-                mesh.rotation.x += deltaMove.y * 0.005;
-
-                previousMousePosition = { x: clientX, y: clientY };
-            };
-
-            const stopDrag = () => {
-                isDragging = false;
-            };
-
-            // Add Listeners
-            const canvas = renderer.domElement;
-            canvas.addEventListener('mousedown', startDrag);
-            canvas.addEventListener('mousemove', drag);
-            canvas.addEventListener('mouseup', stopDrag);
-            
-            canvas.addEventListener('touchstart', startDrag, { passive: false });
-            canvas.addEventListener('touchmove', drag, { passive: false });
-            canvas.addEventListener('touchend', stopDrag);
-
-            // Add to cleanup list (so it doesn't break if we restart)
-            activeListeners.push({ type: 'touchstart', handler: startDrag });
-            activeListeners.push({ type: 'touchmove', handler: drag });
-
-            function animate() {
-                // Keep a tiny bit of auto-rotation if she isn't touching it
-                if (!isDragging) {
-                    mesh.rotation.y += 0.001;
-                    mesh.rotation.x += 0.0005;
-                }
-                
-                renderer.render(scene, camera);
-                if(currentStep === 8) requestAnimationFrame(animate);
-            }
-            animate();
-        }
-
-        function finalAlert() {
-            Swal.fire({
-                title: 'Goodnight Treasure',
-                text: 'its so cold outside 🥶, I wish I could  be under the same sheet with you, Bite you a little on your shoulder and cross legs under the sheets. but alas, GOODNIGHT ABIBI',
-                confirmButtonText: 'Night Night 💤',
-                background: '#1a1a2e',
-                color: '#fff',
-                confirmButtonColor: '#b19cd9'
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('bg-canvas'), 
+                antialias: true, 
+                alpha: true 
             });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            mouse = new THREE.Vector2(0, 0);
+            raycaster = new THREE.Raycaster(); // Added Raycaster for accuracy
+
+            const ambient = new THREE.AmbientLight(0x404040, 2); 
+            scene.add(ambient);
+            
+            const pointLight = new THREE.PointLight(0xbb86fc, 2, 50);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // This will handle all the inputs 🤧 please don't change this part of, was the hardest to get 🥺🥺,
+            
+            window.addEventListener('resize', onResize);
+            window.addEventListener('mousemove', (e) => {
+                updateMouse(e.clientX, e.clientY);
+            });
+            window.addEventListener('mousedown', () => { isHolding = true; triggerInteraction(); });
+            window.addEventListener('mouseup', () => { isHolding = false; });
+
+            window.addEventListener('touchstart', (e) => {
+                isHolding = true;
+                updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+                triggerInteraction();
+            }, {passive: false});
+            
+            window.addEventListener('touchmove', (e) => {
+                e.preventDefault(); 
+                updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+            }, {passive: false});
+
+            window.addEventListener('touchend', () => { isHolding = false; });
+
+            animate();
+            createStars();
         }
+
+        function clearScene() {
+            currentSceneObjects.forEach(obj => scene.remove(obj));
+            currentSceneObjects = [];
+        }
+
+        /* --- SCENE OBJECTS --- */
+
+        function createStars() {
+            const geo = new THREE.BufferGeometry();
+            const count = 1500;
+            const pos = new Float32Array(count * 3);
+            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 40;
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.05, color: 0xbb86fc, transparent: true, opacity: 0.4 });
+            const stars = new THREE.Points(geo, mat);
+            scene.add(stars);
+        }
+
+        let ribbonMesh;
+        function initRibbon() {
+            clearScene();
+            const curve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(-4, 0, 0),
+                new THREE.Vector3(-2, 2, -1),
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(2, -2, 1),
+                new THREE.Vector3(4, 0, 0)
+            ]);
+            const tubeGeo = new THREE.TubeGeometry(curve, 100, 0.08, 8, false);
+            const tubeMat = new THREE.MeshStandardMaterial({ color: 0xbb86fc, emissive: 0x6200ee, roughness: 0.3, metalness: 0.8 });
+            ribbonMesh = new THREE.Mesh(tubeGeo, tubeMat);
+            scene.add(ribbonMesh);
+            currentSceneObjects.push(ribbonMesh);
+        }
+
+        let waterPlane;
+        function initWell() {
+            clearScene();
+            const geo = new THREE.CircleGeometry(5, 64);
+            const mat = new THREE.MeshPhysicalMaterial({ color: 0x1a1a2e, metalness: 0.9, roughness: 0.1, transmission: 0.5, transparent: true, opacity: 0.6});
+            waterPlane = new THREE.Mesh(geo, mat);
+            waterPlane.rotation.x = -Math.PI / 2.5;
+            waterPlane.position.y = -1;
+            scene.add(waterPlane);
+            currentSceneObjects.push(waterPlane);
+        }
+
+        let sandPoints;
+        let originalSandPos;
+        function initSand() {
+            clearScene();
+            const count = 80000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            originalSandPos = new Float32Array(count * 3);
+            
+            for(let i=0; i<count; i++) {
+                let x = (Math.random() - 0.5) * 12;
+                let y = (Math.random() - 0.5) * 8;
+                let z = 0;
+                
+                pos[i*3] = x;
+                pos[i*3+1] = y;
+                pos[i*3+2] = z;
+
+                originalSandPos[i*3] = x;
+                originalSandPos[i*3+1] = y;
+                originalSandPos[i*3+2] = z;
+            }
+            
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({ color: 0xbb86fc, size: 0.03 });
+            sandPoints = new THREE.Points(geo, mat);
+            sandPoints.rotation.x = -Math.PI / 7;
+            
+            scene.add(sandPoints);
+            currentSceneObjects.push(sandPoints);
+        }
+
+        let mainCrystal, cracks;
+        function initCrystal() {
+            clearScene();
+            const geo = new THREE.OctahedronGeometry(1.8, 0);
+            const mat = new THREE.MeshPhysicalMaterial({ color: 0xbb86fc, emissive: 0x220033, transmission: 0.8, thickness: 2, roughness: 0 });
+            mainCrystal = new THREE.Mesh(geo, mat);
+            
+            const wireGeo = new THREE.OctahedronGeometry(1.82, 1);
+            const wireMat = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true, transparent: true, opacity: 0.8 });
+            cracks = new THREE.Mesh(wireGeo, wireMat);
+            
+            const group = new THREE.Group();
+            group.add(mainCrystal);
+            group.add(cracks);
+            scene.add(group);
+            currentSceneObjects.push(group);
+        }
+
+        let lanterns = [];
+        function initLanterns() {
+            clearScene();
+            for(let i=0; i<15; i++) {
+                const geo = new THREE.CylinderGeometry(0.2, 0.15, 0.4, 6);
+                const mat = new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0xffa500, emissiveIntensity: 2 });
+                const l = new THREE.Mesh(geo, mat);
+                l.position.set((Math.random()-0.5)*12, -4 - (Math.random()*6), (Math.random()-0.5)*5);
+                scene.add(l);
+                lanterns.push(l);
+                currentSceneObjects.push(l);
+            }
+        }
+
+        /* --- LOGIC --- */
+
+        function toSlide(n) {
+            const current = document.querySelector(`.slide#slide${activeSlide}`);
+            const next = document.querySelector(`.slide#slide${n}`);
+
+            gsap.to(current, { opacity: 0, scale: 0.9, duration: 0.6, onComplete: () => {
+                current.classList.remove('active');
+                next.classList.add('active');
+                gsap.fromTo(next, { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.8 });
+                activeSlide = n;
+                
+                if(n === 2) initRibbon();
+                if(n === 3) initWell();
+                if(n === 4) initSand();
+                if(n === 5) initCrystal();
+                if(n === 6) initLanterns();
+                if(n === 7) gsap.to(camera.position, { z: 8, duration: 2 });
+            }});
+        }
+
+        function updateMouse(x, y) {
+            mouse.x = (x / window.innerWidth) * 2 - 1;
+            mouse.y = -(y / window.innerHeight) * 2 + 1;
+        }
+
+        function triggerInteraction() {
+            // 💪 DIS IS Ripple Effect (Slide 3) -  USING RAYCASTING, 
+            if(activeSlide === 3 && waterPlane) {
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObject(waterPlane);
+
+                if (intersects.length > 0) {
+                    const point = intersects[0].point;
+                    const ring = new THREE.Mesh(
+                        new THREE.TorusGeometry(0.1, 0.02, 16, 100),
+                        new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true })
+                    );
+                    
+                    // Set rotation and exact hit position
+                    ring.rotation.x = -Math.PI / 2.5;
+                    ring.position.copy(point);
+                    
+                    scene.add(ring);
+                    gsap.to(ring.scale, { x: 30, y: 30, duration: 2 });
+                    gsap.to(ring.material, { opacity: 0, duration: 2, onComplete: () => scene.remove(ring) });
+                }
+            }
+
+            // (please feel free to improve this one,  I feel like there's something I could have done differently but I was just feeling lazy 🦥)Lantern floating release(Slide 6)
+            
+            if(activeSlide === 6) {
+                lanterns.forEach((l, i) => {
+                    gsap.to(l.position, { 
+                        y: 10, 
+                        x: l.position.x + (Math.random()-0.5)*3, 
+                        duration: 5 + Math.random()*5, 
+                        delay: i * 0.05 
+                    });
+                });
+            }
+        }
+
+        function finalPromise() {
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#bb86fc', '#ffd700', '#ffffff']
+            });
+            document.getElementById('final-message').classList.add('visible');
+        }
+
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            let t = clock.getElapsedTime();
+            
+            // 1. RIBBON 🎗️ balloon
+            if(activeSlide === 2 && ribbonMesh) {
+                ribbonMesh.rotation.y += (mouse.x * 1.5 - ribbonMesh.rotation.y) * 0.05;
+                ribbonMesh.rotation.x += (-mouse.y * 1.5 - ribbonMesh.rotation.x) * 0.05;
+                ribbonMesh.rotation.z += 0.005;
+            }
+
+            // 2. SAND RAKING
+            if(activeSlide === 4 && sandPoints) {
+                const positions = sandPoints.geometry.attributes.position.array;
+                const interactX = mouse.x * 6; 
+                const interactY = mouse.y * 4; 
+
+                for(let i=0; i<positions.length/3; i++) {
+                    let px = positions[i*3];
+                    let py = positions[i*3+1];
+                    let ox = originalSandPos[i*3];
+                    let oy = originalSandPos[i*3+1];
+
+                    let dx = interactX - px;
+                    let dy = interactY - py;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+
+                    if(dist < 1.5) {
+                        let angle = Math.atan2(dy, dx);
+                        positions[i*3] -= Math.cos(angle) * 0.15;
+                        positions[i*3+1] -= Math.sin(angle) * 0.15;
+                    } else {
+                        positions[i*3] += (ox - px) * 0.02;
+                        positions[i*3+1] += (oy - py) * 0.02;
+                    }
+                }
+                sandPoints.geometry.attributes.position.needsUpdate = true;
+            }
+
+            // 3. CRYSTAL HEALING (try improving the visuals by adding actual cracks if you can)
+            if(activeSlide === 5 && cracks && mainCrystal) {
+                mainCrystal.rotation.y += 0.005;
+                cracks.rotation.y += 0.005;
+
+                if(isHolding) {
+                    cracks.material.opacity = THREE.MathUtils.lerp(cracks.material.opacity, 0, 0.05);
+                    mainCrystal.material.emissiveIntensity = THREE.MathUtils.lerp(mainCrystal.material.emissiveIntensity, 4, 0.1);
+                    mainCrystal.position.x = (Math.random() - 0.5) * 0.05; // Shake
+                } else {
+                    cracks.material.opacity = THREE.MathUtils.lerp(cracks.material.opacity, 0.8, 0.02);
+                    mainCrystal.material.emissiveIntensity = THREE.MathUtils.lerp(mainCrystal.material.emissiveIntensity, 0.5, 0.05);
+                    mainCrystal.position.x = 0;
+                }
+            }
+
+            if(waterPlane) waterPlane.position.y = -1 + Math.sin(t) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+
+        initCore();
     </script>
 </body>
 </html>
