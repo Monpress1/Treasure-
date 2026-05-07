@@ -2,474 +2,498 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Birthday Treasure | Monpress</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700&family=Playfair+Display:ital,wght@0,600;1,700&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWS - Belgom Network Agreement</title>
     <style>
         :root {
-            /* Deeper Pink / Dark Magenta Gradient */
-            --bg-top: #4e0019;
-            --bg-mid: #9b0031;
-            --bg-bottom: #4e0019;
-            --accent: #ff4d79;
-            --text-dark: #2d0010;
-            --glass: rgba(255, 255, 255, 0.9);
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg-color: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #e2e8f0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-        
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, var(--bg-top), var(--bg-mid), var(--bg-bottom));
-            height: 100vh; width: 100vw;
-            overflow: hidden; color: var(--text-dark);
-            touch-action: none;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 27, 100, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(58, 123, 21, 0.15) 0px, transparent 50%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
         }
 
-        #bg-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
-        }
-
-        .app-interface {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 10;
-            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-            pointer-events: none; 
-            padding-bottom: 50px;
-            transition: opacity 0.4s ease-in-out;
-        }
-
-        /* 0.9s hidden logic handled in JS */
-        .app-interface.hidden-ui { opacity: 0; }
-
-        .slide {
-            position: absolute; bottom: 40px; width: 100%; 
-            display: flex; flex-direction: column; align-items: center;
-            opacity: 0; visibility: hidden;
-            text-align: center; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateY(40px);
-        }
-
-        .slide.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .floating-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 35px;
-            padding: 35px 30px;
-            width: 92%; max-width: 420px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            pointer-events: auto;
+        /* Glassmorphism Container */
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             position: relative;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            z-index: 10;
         }
 
-        .floating-emoji {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 4rem;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
-        }
-
-        h1 { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 2rem; font-weight: 700;
-            margin-bottom: 15px; color: #9b0031;
-            line-height: 1.1;
-        }
-
-        p { font-size: 1.1rem; line-height: 1.6; font-weight: 500; margin-bottom: 25px; }
-
-        .btn {
-            background: #9b0031;
-            border: none; padding: 18px; border-radius: 60px;
-            color: white; cursor: pointer; font-size: 1.1rem;
-            font-weight: 700; width: 100%;
-            box-shadow: 0 15px 30px rgba(155, 0, 49, 0.4);
-            transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
+        /* Headers */
+        h1 {
+            text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: #94a3b8;
             letter-spacing: 1px;
         }
-        .btn:active { transform: scale(0.94); background: #700020; }
 
-        #hint {
-            position: absolute; top: 40px; width: 100%; text-align: center;
-            color: rgba(255, 255, 255, 0.6); font-size: 0.75rem; letter-spacing: 3px;
-            text-transform: uppercase; font-weight: 700; pointer-events: none; z-index: 5;
+        h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
+        /* Page Logic */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Content Typography */
+        p, li {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Toggle Switch (I understand) */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .toggle-label {
+            margin-left: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-color: transparent;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        button.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        button.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            width: 20%;
+            transition: width 0.5s ease;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                align-items: flex-start;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+                background: none;
+                backdrop-filter: none;
+                padding: 20px;
+            }
+            .page {
+                display: block !important;
+                opacity: 1 !important;
+                transform: none !important;
+                margin-bottom: 40px;
+                page-break-inside: avoid;
+            }
+            h1, h3 {
+                color: black !important;
+                -webkit-text-fill-color: black !important;
+                background: none;
+                border-bottom: 1px solid #ccc;
+            }
+            p, li, h2 {
+                color: black;
+            }
+            .toggle-container, .btn-container, .progress-bar {
+                display: none !important;
+            }
+            .print-signature {
+                display: block !important;
+                margin-top: 50px;
+                padding-top: 20px;
+                border-top: 2px solid black;
+            }
+        }
+
+        .print-signature {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-    <div id="hint">Swirl to feel the magic</div>
+    <!-- 3D Background Elements -->
+    <div style="position: absolute; top: 10%; left: 5%; width: 300px; height: 300px; background: rgba(0, 210, 255, 0.1); border-radius: 50%; filter: blur(60px); z-index: 1;"></div>
+    <div style="position: absolute; bottom: 10%; right: 5%; width: 400px; height: 400px; background: rgba(58, 123, 213, 0.1); border-radius: 50%; filter: blur(80px); z-index: 1;"></div>
 
-    <div class="app-interface" id="ui-main">
-        
-        <div class="slide active" id="slide1">
-            <div class="floating-card">
-                <div class="floating-emoji">✨</div>
-                <h1>Hi Treasure</h1>
-                <p>This should take you back to the beginning, remember when we started dating and I'd make these....?</p>
-                <button class="btn" onclick="nextPage(2)">Next 🤍</button>
+    <div class="container">
+        <h1>Monpress Web Solutions (MWS)</h1>
+     <br>  <br> <h2>Mws _ Belgom Network</h2>
+
+        <div class="progress-bar">
+            <div class="progress" id="progressIndicator"></div>
+        </div>
+
+        <!-- PAGE 1: Scope of Agreement -->
+        <div id="page1" class="page active">
+            <h3>1. Scope of Agreement</h3>
+            <p>This document constitutes the official Software Update and Maintenance Agreement between <strong>Monpress Web Solutions (MWS)</strong> ("Developer") and <strong>Belgom Network</strong> ("Client") regarding the continued development and maintenance of the <strong>BELGOM</strong> Progressive Web App (PWA).</p>
+            <p>This contract operates strictly on a "Pay-Per-Update" model. MWS is retained solely for executing specific, requested technical interventions, code improvements, and feature deployments on the Belgom platform.</p>
+            
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle1" onchange="checkToggle(1)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle1">I understand the scope of this agreement.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn1" onclick="nextPage(1, 2)">Proceed to Step 2</button>
             </div>
         </div>
 
-        <div class="slide" id="slide2">
-            <div class="floating-card">
-                <div class="floating-emoji">🥺</div>
-                <p>We've come a long way small, every step, compromise and all those fights and romance, YOU IS GOOD 🤭,</p>
-                <button class="btn" onclick="nextPage(3)">Next 💕</button>
+        <!-- PAGE 2: Communication & Delivery -->
+        <div id="page2" class="page">
+            <h3>2. Communication & Delivery Timelines</h3>
+            <p>To ensure rapid response times and clear execution, the following protocols apply:</p>
+            <ul>
+                <li><strong>Strictly WhatsApp:</strong> All project communication, update requests, approvals, and delivery notices will be conducted exclusively via WhatsApp. Email communications (such as Gmail) or other chat platforms are not recognized for official updates.</li>
+                <li><strong>Delivery Timeline:</strong> Once an update is finalized and payment terms are met, the completed fixes or features are expected to be deployed and fully functional within <strong>3 days</strong>.</li>
+            </ul>
+
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle2" onchange="checkToggle(2)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle2">I understand the communication and timeline rules.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn2" onclick="nextPage(2, 3)">Proceed to Step 3</button>
             </div>
         </div>
 
-        <div class="slide" id="slide3">
-            <div class="floating-card">
-                <div class="floating-emoji">🎂</div>
-                <h1>HAPPY BIRTHDAY ABIBI</h1>
-                <p>Today is all about you!</p>
-                <button class="btn" onclick="nextPage(4)">Next ✨</button>
+        <!-- PAGE 3: Categories of Fixes -->
+        <div id="page3" class="page">
+            <h3>3. Categories of Fixes & Pricing Structure</h3>
+            <p>Prices for updates are not fixed; they are discussed and agreed upon via WhatsApp based strictly on the complexity and level of the fix required. The categories are defined as follows:</p>
+            <ul>
+                <li><strong>Minor Fixes:</strong> Small adjustments such as text modifications, basic UI alignment, or color changes.</li>
+                <li><strong>Standard Fixes:</strong> Integration of single APIs, addition of new pages, or functional bug resolutions within existing logic.</li>
+                <li><strong>Major Fixes:</strong> Core system architecture changes, heavy database modifications, or the deployment of entirely new complex modules.</li>
+            </ul>
+
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle3" onchange="checkToggle(3)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle3">I understand the update categories and pricing approach.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn3" onclick="nextPage(3, 4)">Proceed to Step 4</button>
             </div>
         </div>
 
-        <div class="slide" id="slide4">
-            <div class="floating-card">
-                <div class="floating-emoji">💍</div>
-                <p>You literally live up to your name. You are my actual, real-life <b>Treasure</b>.</p>
-                <button class="btn" onclick="nextPage(5)">Next 🌸</button>
+        <!-- PAGE 4: Payment Terms -->
+        <div id="page4" class="page">
+            <h3>4. Payment Terms</h3>
+            <p>To commence any work on the BELGOM platform, the following strict payment rules apply:</p>
+            <ul>
+                <li><strong>Advance Payment Rule:</strong> For all Minor and Standard fixes, payments must be made in full <strong>before</strong> any development or fixes commence.</li>
+                <li><strong>Major Fixes Structure:</strong> For Major fixes, a down payment is required to initiate the 3-day delivery timeline. The remaining balance is strictly due upon the successful completion of the major fix.</li>
+                <li>No revisions or additional features will be accepted as part of a pending update until the prior update is fully cleared and paid.</li>
+            </ul>
+
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle4" onchange="checkToggle(4)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle4">I understand and agree to the payment terms.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn4" onclick="nextPage(4, 5)">Proceed to Final Step</button>
             </div>
         </div>
 
-        <div class="slide" id="slide5">
-            <div class="floating-card">
-                <div class="floating-emoji">🕊️</div>
-                <p>Thank you for being my absolute peace, my joy, and honestly... my favorite headache.</p>
-                <button class="btn" onclick="nextPage(6)">Next 🤭</button>
+        <!-- PAGE 5: Final Agreement & Download -->
+        <div id="page5" class="page">
+            <h3>5. Final Agreement & Validation</h3>
+            <p>By entering your name below and checking the agreement box, you legally bind Belgom Network to the terms presented by Monpress Web Solutions (MWS).</p>
+            
+            <div class="input-group">
+                <label for="clientName">Authorized Name (Belgom Network Representative):</label>
+                <input type="text" id="clientName" placeholder="Enter your full name" oninput="checkFinalForm()">
             </div>
-        </div>
 
-        <div class="slide" id="slide6">
-            <div class="floating-card">
-                <div class="floating-emoji">🤞🏽</div>
-                <p>I promise to keep annoying you, loving you, and making sure that beautiful smile never leaves your face.</p>
-                <button class="btn" onclick="nextPage(7)">Next 🥺</button>
+            <div class="toggle-container" style="background: rgba(0, 210, 255, 0.1); border-color: var(--primary);">
+                <label class="switch">
+                    <input type="checkbox" id="toggle5" onchange="checkFinalForm()">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle5">I agree to all terms outlined in this Pay-Per-Update contract.</label>
             </div>
-        </div>
 
-        <div class="slide" id="slide7">
-            <div class="floating-card">
-                <div class="floating-emoji">🌟</div>
-                <p>This new year is going to bring you so much light, blessings, and everything you've prayed for.</p>
-                <button class="btn" onclick="nextPage(8)">Next 🙏🏽</button>
+            <div class="print-signature">
+                <p><strong>Agreed and Authorized by:</strong> <span id="printNameDisplay"></span></p>
+                <p><strong>Date of Agreement:</strong> <span id="printDateDisplay"></span></p>
+                <p><strong>Platform:</strong> BELGOM PWA</p>
+                <p><strong>Developer:</strong> Monpress Web Solutions (MWS)</p>
             </div>
-        </div>
 
-        <div class="slide" id="slide8">
-            <div class="floating-card">
-                <div class="floating-emoji">👀</div>
-                <p>Are you ready for your birthday surprise?</p>
-                <button class="btn" onclick="nextPage(9)" id="btn-reveal" style="display:none; background: #ff4d79;">I'm ready! 🎁</button>
-            </div>
-        </div>
-
-        <div class="slide" id="slide9">
-            <div class="floating-card">
-                <div class="floating-emoji">🎉</div>
-                <h1>HAPPY BIRTHDAY TREASURE!</h1>
-                <p>I LOVE YOU SO MUCH! ❤️</p>
-                <button class="btn" onclick="downloadSpecialCard()"><i class="fa-solid fa-cloud-arrow-down"></i> Save Your Card</button>
+            <div class="btn-container">
+                <button id="btnDownload" onclick="downloadAgreement()">Download Full Form</button>
             </div>
         </div>
 
     </div>
 
     <script>
-        // --- LOGIC: UI VISIBILITY (0.9s DELAY) ---
-        const uiMain = document.getElementById('ui-main');
-        let uiTimer;
-
-        function handleInteraction(e) {
-            if (!e.target.closest('.floating-card')) {
-                uiMain.classList.add('hidden-ui');
-                clearTimeout(uiTimer);
-            }
-        }
-        function releaseInteraction() {
-            clearTimeout(uiTimer);
-            uiTimer = setTimeout(() => {
-                uiMain.classList.remove('hidden-ui');
-            }, 900); // FIXED: Exactly 0.9 seconds
-        }
-
-        window.addEventListener('mousedown', handleInteraction);
-        window.addEventListener('touchstart', handleInteraction, {passive: true});
-        window.addEventListener('mouseup', releaseInteraction);
-        window.addEventListener('touchend', releaseInteraction);
-
-        // --- THREE.JS: THE EXPERIENCE ---
-        let scene, camera, renderer, clock = new THREE.Clock();
-        let mouse = new THREE.Vector2(), raycaster = new THREE.Raycaster();
-        let activeElements = [];
-        let currentPage = 1;
-
-        function init3D() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-            camera.position.z = 5;
-
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            const light1 = new THREE.DirectionalLight(0xffffff, 1);
-            light1.position.set(2, 2, 5);
-            scene.add(light1);
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-
-            window.addEventListener('resize', onResize);
-            window.addEventListener('mousemove', (e) => { mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.clientY / window.innerHeight) * 2 + 1; });
-            window.addEventListener('touchmove', (e) => { mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1; }, {passive: true});
-            window.addEventListener('click', checkCandle);
-
-            loadScene_Stars(); 
-            animate();
-        }
-
-        function cleanScene() {
-            activeElements.forEach(o => scene.remove(o));
-            activeElements = [];
-        }
-
-        // SCENE 1: Swirling Nebula (Pages 1, 2, 3)
-        let stars;
-        function loadScene_Stars() {
-            cleanScene();
-            const count = 3000;
-            const pos = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 20;
-            const geo = new THREE.BufferGeometry();
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            const mat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.6 });
-            stars = new THREE.Points(geo, mat);
-            scene.add(stars);
-            activeElements.push(stars);
-        }
-
-        // SCENE 2: The "Treasure" Pulse (Page 4) - NO DIAMOND
-        let treasureRing;
-        function loadScene_Treasure() {
-            cleanScene();
-            // Using a complex Torus Knot for a "precious" feel
-            const geo = new THREE.TorusKnotGeometry(1.2, 0.4, 150, 20);
-            const mat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 1, roughness: 0.1, wireframe: true });
-            treasureRing = new THREE.Mesh(geo, mat);
-            scene.add(treasureRing);
-            activeElements.push(treasureRing);
-        }
-
-        // SCENE 3: Drifting Ribbons (Pages 5, 6)
-        let ribbons = [];
-        function loadScene_Ribbons() {
-            cleanScene();
-            for(let i=0; i<15; i++) {
-                const geo = new THREE.TorusGeometry(Math.random()*1.5, 0.02, 16, 100);
-                const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 });
-                const r = new THREE.Mesh(geo, mat);
-                r.position.set((Math.random()-0.5)*10, (Math.random()-0.5)*10, (Math.random()-0.5)*5);
-                scene.add(r);
-                ribbons.push(r);
-                activeElements.push(r);
+        function checkToggle(pageNum) {
+            const toggle = document.getElementById('toggle' + pageNum);
+            const btn = document.getElementById('btn' + pageNum);
+            if(toggle.checked) {
+                btn.classList.add('enabled');
+            } else {
+                btn.classList.remove('enabled');
             }
         }
 
-        // SCENE 4: Rising Light Orbs (Page 7)
-        let orbs = [];
-        function loadScene_Orbs() {
-            cleanScene();
-            for(let i=0; i<30; i++) {
-                const orb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.5}));
-                orb.position.set((Math.random()-0.5)*12, -10, (Math.random()-0.5)*5);
-                scene.add(orb);
-                orbs.push(orb);
-                activeElements.push(orb);
-            }
-        }
-
-        // SCENE 5: The Candle (Page 8)
-        let candleBase, flameObj;
-        let isBlown = false;
-        function loadScene_Candle() {
-            cleanScene();
-            isBlown = false;
-            const group = new THREE.Group();
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 3), new THREE.MeshStandardMaterial({color: 0xffffff}));
-            flameObj = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.8), new THREE.MeshBasicMaterial({color: 0xffcc00}));
-            flameObj.position.y = 1.9;
-            group.add(body); group.add(flameObj);
-            scene.add(group);
-            activeElements.push(group);
-        }
-
-        // SCENE 6: The Final Heart (Page 9)
-        let finalHeart;
-        function loadScene_Heart() {
-            cleanScene();
-            const shape = new THREE.Shape();
-            shape.moveTo(0,0);
-            shape.bezierCurveTo(0,-3, -5,-3, -5,0);
-            shape.bezierCurveTo(-5,3, 0,6, 0,10);
-            shape.bezierCurveTo(0,6, 5,3, 5,0);
-            shape.bezierCurveTo(5,-3, 0,-3, 0,0);
-            const geo = new THREE.ExtrudeGeometry(shape, {depth: 1, bevelEnabled: true});
-            const mat = new THREE.MeshStandardMaterial({color: 0xff0055});
-            finalHeart = new THREE.Mesh(geo, mat);
-            finalHeart.scale.set(0.25, -0.25, 0.25);
-            finalHeart.position.y = 1.2;
-            scene.add(finalHeart);
-            activeElements.push(finalHeart);
-            confetti({particleCount: 200, spread: 80, origin: {y: 0.6}});
-        }
-
-        // --- NAVIGATION ---
-        function nextPage(n) {
-            document.querySelector(`.slide#slide${currentPage}`).classList.remove('active');
-            currentPage = n;
+        function nextPage(current, next) {
+            document.getElementById('page' + current).classList.remove('active');
             setTimeout(() => {
-                document.querySelector(`.slide#slide${currentPage}`).classList.add('active');
-                if(n === 4) loadScene_Treasure();
-                if(n === 5) loadScene_Ribbons();
-                if(n === 7) loadScene_Orbs();
-                if(n === 8) loadScene_Candle();
-                if(n === 9) loadScene_Heart();
-            }, 400);
+                document.getElementById('page' + next).classList.add('active');
+                document.getElementById('progressIndicator').style.width = (next * 20) + '%';
+            }, 300); // Wait for fade out animation
         }
 
-        function checkCandle() {
-            if(currentPage === 8 && !isBlown) {
-                raycaster.setFromCamera(mouse, camera);
-                const hits = raycaster.intersectObjects(activeElements[0].children);
-                if(hits.length > 0) {
-                    isBlown = true;
-                    gsap.to(flameObj.scale, {x:0, y:0, z:0, duration: 0.5});
-                    document.getElementById('btn-reveal').style.display = 'flex';
-                }
-            }
-        }
-
-        function onResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            let t = clock.getElapsedTime();
-
-            if(stars) {
-                stars.rotation.y += 0.001;
-                stars.position.x = mouse.x * 0.5;
-            }
-            if(treasureRing) {
-                treasureRing.rotation.y = t * 0.5;
-                treasureRing.rotation.z = Math.sin(t) * 0.5;
-                treasureRing.scale.setScalar(1 + Math.sin(t*3) * 0.1);
-            }
-            if(ribbons.length > 0) {
-                ribbons.forEach((r, i) => {
-                    r.rotation.x += 0.01;
-                    r.rotation.y += 0.01;
-                    r.position.y += Math.sin(t + i) * 0.005;
-                });
-            }
-            if(orbs.length > 0) {
-                orbs.forEach(o => {
-                    o.position.y += 0.03;
-                    if(o.position.y > 10) o.position.y = -10;
-                });
-            }
-            if(flameObj && !isBlown) {
-                flameObj.scale.y = 1 + Math.sin(t * 15) * 0.2;
-            }
-            if(finalHeart) {
-                finalHeart.rotation.y = Math.sin(t) * 0.2;
-                finalHeart.scale.setScalar(0.25 + Math.sin(t*5)*0.03);
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        // --- DOWNLOAD CARD (FLORAL DESIGN + CURLS) ---
-        function downloadSpecialCard() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 1200; canvas.height = 1600;
-            const ctx = canvas.getContext('2d');
-
-            // Rich Gradient Background
-            const g = ctx.createLinearGradient(0, 0, 0, 1600);
-            g.addColorStop(0, '#4e0019');
-            g.addColorStop(0.5, '#9b0031');
-            g.addColorStop(1, '#4e0019');
-            ctx.fillStyle = g;
-            ctx.fillRect(0, 0, 1200, 1600);
-
-            // Border
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 15;
-            ctx.strokeRect(60, 60, 1080, 1480);
-
-            // Curls in Corners
-            ctx.strokeStyle = '#ff4d79';
-            ctx.lineWidth = 5;
-            function drawCurl(x, y, r) {
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, Math.PI * 1.5);
-                ctx.stroke();
-            }
-            drawCurl(100, 100, 40); drawCurl(1100, 100, 40);
-            drawCurl(100, 1500, 40); drawCurl(1100, 1500, 40);
-
-            // Flower Icons on edges
-            ctx.font = '70px Arial';
-            ctx.textAlign = 'center';
-            const flowers = ['🌺', '💐', '🌺', '💐'];
-            ctx.fillText(flowers[0], 600, 120); // Top
-            ctx.fillText(flowers[1], 600, 1530); // Bottom
-            ctx.fillText(flowers[2], 120, 800); // Left
-            ctx.fillText(flowers[3], 1080, 800); // Right
-
-            // Text
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.font = 'italic 75px "Playfair Display"';
-            ctx.fillText('Hey birthday girl,', 600, 600);
+        function checkFinalForm() {
+            const name = document.getElementById('clientName').value.trim();
+            const agreed = document.getElementById('toggle5').checked;
+            const btn = document.getElementById('btnDownload');
             
-            ctx.font = 'bold 95px "Plus Jakarta Sans"';
-            ctx.fillText('Monpress loves you,', 600, 750);
-            
-            ctx.font = '50px "Plus Jakarta Sans"';
-            ctx.fillText('Signed', 600, 1100);
-            ctx.font = 'bold 65px "Plus Jakarta Sans"';
-            ctx.fillText('Monpress >> Treasure', 600, 1200);
-
-            const link = document.createElement('a');
-            link.download = 'For_Treasure_With_Love.png';
-            link.href = canvas.toDataURL();
-            link.click();
+            if(name !== "" && agreed) {
+                btn.classList.add('enabled');
+            } else {
+                btn.classList.remove('enabled');
+            }
         }
 
-        init3D();
+        function downloadAgreement() {
+            // Populate print fields
+            const name = document.getElementById('clientName').value;
+            const today = new Date().toLocaleDateString();
+            document.getElementById('printNameDisplay').innerText = name;
+            document.getElementById('printDateDisplay').innerText = today;
+            
+            // Expand all pages for the print view
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.style.display = 'block';
+                page.style.opacity = '1';
+                page.style.transform = 'none';
+            });
+
+            // Trigger print dialog (which allows saving as PDF)
+            window.print();
+
+            // Restore view after print
+            setTimeout(() => {
+                pages.forEach(page => {
+                    page.style.display = '';
+                    page.style.opacity = '';
+                    page.style.transform = '';
+                });
+                document.getElementById('page1').classList.remove('active');
+                document.getElementById('page2').classList.remove('active');
+                document.getElementById('page3').classList.remove('active');
+                document.getElementById('page4').classList.remove('active');
+                document.getElementById('page5').classList.add('active');
+            }, 1000);
+        }
+
+        // Initialize progress bar
+        window.onload = () => {
+            document.getElementById('progressIndicator').style.width = '20%';
+        };
     </script>
 </body>
 </html>
-
