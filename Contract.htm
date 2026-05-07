@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWS - Belgom Network Agreement</title>
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg-color: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 27, 100, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(58, 123, 21, 0.15) 0px, transparent 50%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Container */
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Headers */
+        h1 {
+            text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Page Logic */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Content Typography */
+        p, li {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Toggle Switch (I understand) */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .toggle-label {
+            margin-left: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-color: transparent;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        button.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        button.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            width: 20%;
+            transition: width 0.5s ease;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                align-items: flex-start;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+                background: none;
+                backdrop-filter: none;
+                padding: 20px;
+            }
+            .page {
+                display: block !important;
+                opacity: 1 !important;
+                transform: none !important;
+                margin-bottom: 40px;
+                page-break-inside: avoid;
+            }
+            h1, h3 {
+                color: black !important;
+                -webkit-text-fill-color: black !important;
+                background: none;
+                border-bottom: 1px solid #ccc;
+            }
+            p, li, h2 {
+                color: black;
+            }
+            .toggle-container, .btn-container, .progress-bar {
+                display: none !important;
+            }
+            .print-signature {
+                display: block !important;
+                margin-top: 50px;
+                padding-top: 20px;
+                border-top: 2px solid black;
+            }
+        }
+
+        .print-signature {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Background Elements -->
+    <div style="position: absolute; top: 10%; left: 5%; width: 300px; height: 300px; background: rgba(0, 210, 255, 0.1); border-radius: 50%; filter: blur(60px); z-index: 1;"></div>
+    <div style="position: absolute; bottom: 10%; right: 5%; width: 400px; height: 400px; background: rgba(58, 123, 213, 0.1); border-radius: 50%; filter: blur(80px); z-index: 1;"></div>
+
+    <div class="container">
+        <h1>Monpress Web Solutions (MWS)</h1>
+     <br>  <br> <h2>Mws _ Belgom Network</h2>
+
+        <div class="progress-bar">
+            <div class="progress" id="progressIndicator"></div>
+        </div>
+
+        <!-- PAGE 1: Scope of Agreement -->
+        <div id="page1" class="page active">
+            <h3>1. Scope of Agreement</h3>
+            <p>This document constitutes the official Software Update and Maintenance Agreement between <strong>Monpress Web Solutions (MWS)</strong> ("Developer") and <strong>Belgom Network</strong> ("Client") regarding the continued development and maintenance of the <strong>BELGOM</strong> Progressive Web App (PWA).</p>
+            <p>This contract operates strictly on a "Pay-Per-Update" model. MWS is retained solely for executing specific, requested technical interventions, code improvements, and feature deployments on the Belgom platform.</p>
+            
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle1" onchange="checkToggle(1)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle1">I understand the scope of this agreement.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn1" onclick="nextPage(1, 2)">Proceed to Step 2</button>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Communication & Delivery -->
+        <div id="page2" class="page">
+            <h3>2. Communication & Delivery Timelines</h3>
+            <p>To ensure rapid response times and clear execution, the following protocols apply:</p>
+            <ul>
+                <li><strong>Strictly WhatsApp:</strong> All project communication, update requests, approvals, and delivery notices will be conducted exclusively via WhatsApp. Email communications (such as Gmail) or other chat platforms are not recognized for official updates.</li>
+                <li><strong>Delivery Timeline:</strong> Once an update is finalized and payment terms are met, the completed fixes or features are expected to be deployed and fully functional within <strong>3 days</strong>.</li>
+            </ul>
+
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle2" onchange="checkToggle(2)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle2">I understand the communication and timeline rules.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn2" onclick="nextPage(2, 3)">Proceed to Step 3</button>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Categories of Fixes -->
+        <div id="page3" class="page">
+            <h3>3. Categories of Fixes & Pricing Structure</h3>
+            <p>Prices for updates are not fixed; they are discussed and agreed upon via WhatsApp based strictly on the complexity and level of the fix required. The categories are defined as follows:</p>
+            <ul>
+                <li><strong>Minor Fixes:</strong> Small adjustments such as text modifications, basic UI alignment, or color changes.</li>
+                <li><strong>Standard Fixes:</strong> Integration of single APIs, addition of new pages, or functional bug resolutions within existing logic.</li>
+                <li><strong>Major Fixes:</strong> Core system architecture changes, heavy database modifications, or the deployment of entirely new complex modules.</li>
+            </ul>
+
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle3" onchange="checkToggle(3)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle3">I understand the update categories and pricing approach.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn3" onclick="nextPage(3, 4)">Proceed to Step 4</button>
+            </div>
+        </div>
+
+        <!-- PAGE 4: Payment Terms -->
+        <div id="page4" class="page">
+            <h3>4. Payment Terms</h3>
+            <p>To commence any work on the BELGOM platform, the following strict payment rules apply:</p>
+            <ul>
+                <li><strong>Advance Payment Rule:</strong> For all Minor and Standard fixes, payments must be made in full <strong>before</strong> any development or fixes commence.</li>
+                <li><strong>Major Fixes Structure:</strong> For Major fixes, a down payment is required to initiate the 3-day delivery timeline. The remaining balance is strictly due upon the successful completion of the major fix.</li>
+                <li>No revisions or additional features will be accepted as part of a pending update until the prior update is fully cleared and paid.</li>
+            </ul>
+
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="toggle4" onchange="checkToggle(4)">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle4">I understand and agree to the payment terms.</label>
+            </div>
+            <div class="btn-container">
+                <button id="btn4" onclick="nextPage(4, 5)">Proceed to Final Step</button>
+            </div>
+        </div>
+
+        <!-- PAGE 5: Final Agreement & Download -->
+        <div id="page5" class="page">
+            <h3>5. Final Agreement & Validation</h3>
+            <p>By entering your name below and checking the agreement box, you legally bind Belgom Network to the terms presented by Monpress Web Solutions (MWS).</p>
+            
+            <div class="input-group">
+                <label for="clientName">Authorized Name (Belgom Network Representative):</label>
+                <input type="text" id="clientName" placeholder="Enter your full name" oninput="checkFinalForm()">
+            </div>
+
+            <div class="toggle-container" style="background: rgba(0, 210, 255, 0.1); border-color: var(--primary);">
+                <label class="switch">
+                    <input type="checkbox" id="toggle5" onchange="checkFinalForm()">
+                    <span class="slider"></span>
+                </label>
+                <label class="toggle-label" for="toggle5">I agree to all terms outlined in this Pay-Per-Update contract.</label>
+            </div>
+
+            <div class="print-signature">
+                <p><strong>Agreed and Authorized by:</strong> <span id="printNameDisplay"></span></p>
+                <p><strong>Date of Agreement:</strong> <span id="printDateDisplay"></span></p>
+                <p><strong>Platform:</strong> BELGOM PWA</p>
+                <p><strong>Developer:</strong> Monpress Web Solutions (MWS)</p>
+            </div>
+
+            <div class="btn-container">
+                <button id="btnDownload" onclick="downloadAgreement()">Download Full Form</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function checkToggle(pageNum) {
+            const toggle = document.getElementById('toggle' + pageNum);
+            const btn = document.getElementById('btn' + pageNum);
+            if(toggle.checked) {
+                btn.classList.add('enabled');
+            } else {
+                btn.classList.remove('enabled');
+            }
+        }
+
+        function nextPage(current, next) {
+            document.getElementById('page' + current).classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('page' + next).classList.add('active');
+                document.getElementById('progressIndicator').style.width = (next * 20) + '%';
+            }, 300); // Wait for fade out animation
+        }
+
+        function checkFinalForm() {
+            const name = document.getElementById('clientName').value.trim();
+            const agreed = document.getElementById('toggle5').checked;
+            const btn = document.getElementById('btnDownload');
+            
+            if(name !== "" && agreed) {
+                btn.classList.add('enabled');
+            } else {
+                btn.classList.remove('enabled');
+            }
+        }
+
+        function downloadAgreement() {
+            // Populate print fields
+            const name = document.getElementById('clientName').value;
+            const today = new Date().toLocaleDateString();
+            document.getElementById('printNameDisplay').innerText = name;
+            document.getElementById('printDateDisplay').innerText = today;
+            
+            // Expand all pages for the print view
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.style.display = 'block';
+                page.style.opacity = '1';
+                page.style.transform = 'none';
+            });
+
+            // Trigger print dialog (which allows saving as PDF)
+            window.print();
+
+            // Restore view after print
+            setTimeout(() => {
+                pages.forEach(page => {
+                    page.style.display = '';
+                    page.style.opacity = '';
+                    page.style.transform = '';
+                });
+                document.getElementById('page1').classList.remove('active');
+                document.getElementById('page2').classList.remove('active');
+                document.getElementById('page3').classList.remove('active');
+                document.getElementById('page4').classList.remove('active');
+                document.getElementById('page5').classList.add('active');
+            }, 1000);
+        }
+
+        // Initialize progress bar
+        window.onload = () => {
+            document.getElementById('progressIndicator').style.width = '20%';
+        };
+    </script>
+</body>
+  </html>
+  
