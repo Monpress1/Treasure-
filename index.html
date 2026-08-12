@@ -1,1 +1,683 @@
-bby
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mon Cœur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blush: #ff9ebb;
+    --rosewood: #e05375;
+    --plum: #4a154b;
+    --indigo: #1e1035;
+    --midnight: #0c0814;
+    --cream: #fff1e6;
+    --gold: #f6d365;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 30%, #1e1035 0%, #0c0814 100%);
+    font-family: 'Jost', sans-serif;
+    color: var(--cream);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  #scroller {
+    height: 100vh;
+    width: 100vw;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    z-index: 2;
+  }
+  #scroller::-webkit-scrollbar { display: none; }
+
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  section.page {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 8vh 8vw;
+    background: transparent;
+  }
+
+  .month-stamp {
+    position: absolute;
+    top: 4vh;
+    left: 5vw;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--blush);
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .month-stamp::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rosewood);
+    box-shadow: 0 0 8px var(--rosewood);
+  }
+
+  .veil {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(12, 8, 20, 0.3) 0%, rgba(12, 8, 20, 0.75) 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--blush);
+    opacity: 0.9;
+    margin-bottom: 1.2rem;
+    font-weight: 400;
+  }
+
+  h1, h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    line-height: 1.15;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.7);
+  }
+
+  #page-cover h1 {
+    font-size: clamp(3.4rem, 10vw, 7rem);
+    font-style: italic;
+    font-weight: 300;
+    background: linear-gradient(135deg, #fff1e6 0%, #ff9ebb 50%, #f6d365 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  #page-cover .sub {
+    margin-top: 1.2rem;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    letter-spacing: 0.04em;
+    color: #f1d5db;
+    max-width: 36ch;
+  }
+
+  .page h2 {
+    font-size: clamp(2rem, 5.2vw, 3.5rem);
+    max-width: 19ch;
+    margin-bottom: 1.4rem;
+    color: #fff6ee;
+  }
+  .page p {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: clamp(1rem, 1.9vw, 1.2rem);
+    line-height: 1.8;
+    max-width: 46ch;
+    color: #eed6db;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.6);
+  }
+  .page p + p { margin-top: 1rem; }
+  
+  .signature-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--blush);
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--blush);
+    opacity: 0.7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-cue .line {
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--blush), transparent);
+  }
+
+  #dots {
+    position: fixed;
+    right: 3vw;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #dots button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 158, 187, 0.4);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s, transform 0.3s;
+  }
+  #dots button.active {
+    background: var(--blush);
+    box-shadow: 0 0 10px var(--rosewood);
+    transform: scale(1.3);
+  }
+
+  #sound-toggle {
+    position: fixed;
+    left: 4vw;
+    bottom: 4vh;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(30, 16, 53, 0.45);
+    border: 1px solid rgba(255, 158, 187, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  #sound-toggle .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--rosewood);
+    box-shadow: 0 0 6px var(--rosewood);
+  }
+  #sound-toggle.on .dot {
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+  }
+
+  @media (max-width: 600px) {
+    #dots { right: 3vw; }
+    section.page { padding: 6vh 6vw; }
+    .month-stamp { top: 3vh; left: 4vw; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div id="dots"></div>
+<div id="sound-toggle"><span class="dot"></span><span id="sound-label">please tap</span></div>
+
+<div id="scroller">
+
+  <section class="page" id="page-cover">
+    <div class="month-stamp">Prologue</div>
+    <div class="veil"></div>
+    <div class="eyebrow">for treasure</div>
+    <h1>Mon Cœur</h1>
+    <p class="sub">Eight months of you, and a few honest minutes about what's next. Scroll or swipe whenever you're ready.</p>
+    <div class="scroll-cue"><span>begin</span><span class="line"></span></div>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">January</div>
+    <div class="veil"></div>
+    <div class="eyebrow">before anything else</div>
+    <h2>None of this is on you.</h2>
+    <p>If anything I've said lately made you feel like you did something wrong, I need you to hear this clearly: you didn't. Not once.</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">February</div>
+    <div class="veil"></div>
+    <div class="eyebrow">the honest part</div>
+    <h2>I don't know if this works long-term.</h2>
+    <p>That's the truth I've been sitting with, not because of anything you did, just where I think we're each headed. I don't have it all figured out, and I didn't want to keep that from you.</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">March</div>
+    <div class="veil"></div>
+    <div class="eyebrow">still true</div>
+    <h2>I still love you.</h2>
+    <p>That hasn't moved. I'm telling you the uncertain part because I love you, not instead of it.</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">April</div>
+    <div class="veil"></div>
+    <div class="eyebrow">eight of them, so far</div>
+    <h2>Every one of these months, held onto.</h2>
+    <p>Each month is a steady piece of what we built together.</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">May</div>
+    <div class="veil"></div>
+    <div class="eyebrow">if you'll let me be a little sentimental</div>
+    <h2>Call it fate, if that's your word for it.</h2>
+    <p>If fate brought us to each other, I'd like to think it also gets a say in how long we run. I don't think that has to be decided tonight.</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">June</div>
+    <div class="veil"></div>
+    <div class="eyebrow">what I actually want</div>
+    <h2>I don't want to end this yet.</h2>
+    <p>I'd rather we kept going and just see how it feels, no pressure to have an answer today. Let's give it until the holidays, or the end of the semester, and figure out the rest from there. Together, not on a deadline</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">July</div>
+    <div class="veil"></div>
+    <div class="eyebrow">for the record</div>
+    <h2>You're the best girlfriend I've ever had.</h2>
+    <p>Whoever comes after you, if there's ever an after, is going to be measured against a bar you set without even trying, I know it's going to be very hard to find someone who tops that</p>
+  </section>
+
+  <section class="page">
+    <div class="month-stamp">August</div>
+    <div class="veil"></div>
+    <div class="eyebrow">last page, for now</div>
+    <h2>However this goes, I'm grateful for it.</h2>
+    <p>Thank you for eight months I meant every part of, and for whatever we get between now and the end.</p>
+    <p class="signature-word" style="font-size:1.4rem; display:block; margin-top:1.4rem;">— always, Mon Cœur.</p>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------------------------------------------------------
+   NAVIGATION & SCROLL INTERACTION
+--------------------------------------------------------- */
+const scroller = document.getElementById('scroller');
+const pages = Array.from(document.querySelectorAll('section.page'));
+const dotsWrap = document.getElementById('dots');
+
+pages.forEach((p, i) => {
+  const b = document.createElement('button');
+  if (i === 0) b.classList.add('active');
+  b.addEventListener('click', () => p.scrollIntoView({ behavior: 'smooth' }));
+  dotsWrap.appendChild(b);
+});
+const dotEls = Array.from(dotsWrap.children);
+
+let currentPageIndex = 0;
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+      const idx = pages.indexOf(entry.target);
+      dotEls.forEach(d => d.classList.remove('active'));
+      if (dotEls[idx]) dotEls[idx].classList.add('active');
+      currentPageIndex = idx;
+      onPageChange(idx);
+    }
+  });
+}, { threshold: [0.5] });
+pages.forEach(p => io.observe(p));
+
+/* ---------------------------------------------------------
+   FAST-RESPONSIVE THREE.JS SCENE
+--------------------------------------------------------- */
+const bgCanvas = document.getElementById('bg-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.z = 6.5;
+
+scene.add(new THREE.AmbientLight(0xffd1dc, 1.2));
+
+const pointLight1 = new THREE.PointLight(0xff758c, 2.5, 30);
+pointLight1.position.set(4, 5, 4);
+scene.add(pointLight1);
+
+const pointLight2 = new THREE.PointLight(0x7928ca, 2.2, 30);
+pointLight2.position.set(-4, -4, 2);
+scene.add(pointLight2);
+
+// Ambient Floating Particles
+const PARTICLE_COUNT = 450;
+const posArray = new Float32Array(PARTICLE_COUNT * 3);
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  posArray[i * 3 + 0] = (Math.random() - 0.5) * 18;
+  posArray[i * 3 + 1] = (Math.random() - 0.5) * 20;
+  posArray[i * 3 + 2] = (Math.random() - 0.5) * 10 - 1;
+}
+const starGeo = new THREE.BufferGeometry();
+starGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+const starMat = new THREE.PointsMaterial({ 
+  color: 0xffb3c6, 
+  size: 0.055, 
+  transparent: true, 
+  opacity: 0.75 
+});
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+// Central Visual Ribbon Knot
+function createRibbonGeometry() {
+  const geom = new THREE.BufferGeometry();
+  const segments = 160;
+  const ribbonWidth = 0.6;
+  const vertices = [];
+  const indices = [];
+
+  for (let i = 0; i <= segments; i++) {
+    const u = (i / segments) * Math.PI * 2;
+    const px = Math.sin(u) * 1.5 + Math.sin(2 * u) * 1.2;
+    const py = Math.cos(u) * 1.5 - Math.cos(2 * u) * 1.2;
+    const pz = -Math.sin(3 * u) * 1.4;
+
+    const nx = Math.cos(u * 0.5) * ribbonWidth;
+    const ny = Math.sin(u * 0.5) * ribbonWidth;
+
+    vertices.push(px - nx, py - ny, pz);
+    vertices.push(px + nx, py + ny, pz);
+
+    if (i < segments) {
+      const a = i * 2;
+      indices.push(a, a + 1, a + 2);
+      indices.push(a + 1, a + 3, a + 2);
+    }
+  }
+  geom.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  geom.setIndex(indices);
+  geom.computeVertexNormals();
+  return geom;
+}
+
+const ribbonMat = new THREE.MeshStandardMaterial({
+  color: 0xe05375,
+  emissive: 0x4a154b,
+  roughness: 0.25,
+  metalness: 0.3,
+  transparent: true,
+  opacity: 0.4,
+  side: THREE.DoubleSide
+});
+const ribbonMesh = new THREE.Mesh(createRibbonGeometry(), ribbonMat);
+scene.add(ribbonMesh);
+
+// 3D Glass-Style Hearts (Visible right away on the first screen)
+const heartShape = new THREE.Shape();
+heartShape.moveTo(0.25, 0.25);
+heartShape.bezierCurveTo(0.25, 0.25, 0.20, 0, 0, 0);
+heartShape.bezierCurveTo(-0.30, 0, -0.30, 0.35, -0.30, 0.35);
+heartShape.bezierCurveTo(-0.30, 0.55, -0.10, 0.77, 0.25, 0.95);
+heartShape.bezierCurveTo(0.60, 0.77, 0.80, 0.55, 0.80, 0.35);
+heartShape.bezierCurveTo(0.80, 0.35, 0.80, 0, 0.50, 0);
+heartShape.bezierCurveTo(0.35, 0, 0.25, 0.25, 0.25, 0.25);
+
+const heartGeo = new THREE.ExtrudeGeometry(heartShape, {
+  depth: 0.12, 
+  bevelEnabled: true, 
+  bevelSegments: 3, 
+  steps: 1, 
+  bevelSize: 0.04, 
+  bevelThickness: 0.04 
+});
+heartGeo.center();
+
+const heartMat = new THREE.MeshStandardMaterial({
+  color: 0xff758c,
+  emissive: 0x6b114d,
+  roughness: 0.15,
+  metalness: 0.2,
+  transparent: true,
+  opacity: 0.7
+});
+
+const hearts = [];
+const heartConfigs = [
+  { pos: [0, 0, 0.5], scale: 0.75, rotSpeed: 0.015 },
+  { pos: [-2.4, 2.0, -1.0], scale: 0.45, rotSpeed: 0.012 },
+  { pos: [2.5, 1.8, -0.8], scale: 0.5, rotSpeed: -0.014 },
+  { pos: [-2.3, -2.2, -1.2], scale: 0.42, rotSpeed: 0.01 },
+  { pos: [2.2, -2.0, -1.0], scale: 0.48, rotSpeed: -0.012 },
+  { pos: [0, -3.2, -0.5], scale: 0.55, rotSpeed: 0.016 }
+];
+
+heartConfigs.forEach((cfg) => {
+  const mesh = new THREE.Mesh(heartGeo, heartMat);
+  mesh.scale.set(cfg.scale, cfg.scale, cfg.scale);
+  mesh.position.set(...cfg.pos);
+  mesh.rotation.z = Math.PI;
+  scene.add(mesh);
+  hearts.push({ mesh, ...cfg });
+});
+
+// Smooth Render Loop (Starts immediately)
+let scrollProgress = 0;
+scroller.addEventListener('scroll', () => {
+  const max = scroller.scrollHeight - window.innerHeight;
+  scrollProgress = max > 0 ? scroller.scrollTop / max : 0;
+});
+
+let clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const time = clock.getElapsedTime();
+
+  // Gentle ribbon rotation
+  ribbonMesh.rotation.x = time * 0.12 + scrollProgress * 3.5;
+  ribbonMesh.rotation.y = time * 0.15 + scrollProgress * 2.5;
+
+  // Immediate lively hearts
+  hearts.forEach((h, i) => {
+    h.mesh.rotation.y = Math.PI + Math.sin(time * 0.8 + i) * 0.45;
+    h.mesh.rotation.x = Math.cos(time * 0.7 + i) * 0.2;
+    h.mesh.position.y = h.pos[1] + Math.sin(time * 1.2 + i * 1.5) * 0.18 - scrollProgress * 1.2;
+  });
+
+  // Twinkling particles
+  stars.rotation.y = time * 0.03;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* ---------------------------------------------------------
+   CALM AMBIENT AUDIO
+--------------------------------------------------------- */
+let audioCtx = null;
+let audioOn = false;
+let masterGain, chimeTimer = null;
+
+const soundToggle = document.getElementById('sound-toggle');
+const soundLabel = document.getElementById('sound-label');
+
+const scales = [
+  [261.63, 293.66, 329.63, 392.00, 440.00, 523.25],
+  [220.00, 261.63, 293.66, 329.63, 392.00, 440.00],
+  [196.00, 220.00, 246.94, 293.66, 329.63, 392.00],
+  [174.61, 196.00, 220.00, 261.63, 293.66, 349.23]
+];
+
+function buildImpulseResponse(ctx) {
+  const rate = ctx.sampleRate;
+  const length = rate * 2.5;
+  const impulse = ctx.createBuffer(2, length, rate);
+  const left = impulse.getChannelData(0);
+  const right = impulse.getChannelData(1);
+  for (let i = 0; i < length; i++) {
+    const factor = Math.pow(1 - i / length, 2.5);
+    left[i] = (Math.random() * 2 - 1) * factor;
+    right[i] = (Math.random() * 2 - 1) * factor;
+  }
+  return impulse;
+}
+
+function initInstrumentAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  masterGain = audioCtx.createGain();
+  masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+  const revNode = audioCtx.createConvolver();
+  revNode.buffer = buildImpulseResponse(audioCtx);
+
+  const dryGain = audioCtx.createGain();
+  dryGain.gain.value = 0.6;
+  const wetGain = audioCtx.createGain();
+  wetGain.gain.value = 0.5;
+
+  masterGain.connect(dryGain);
+  masterGain.connect(revNode);
+  revNode.connect(wetGain);
+
+  dryGain.connect(audioCtx.destination);
+  wetGain.connect(audioCtx.destination);
+
+  // Warm ambient chord base
+  const droneFilter = audioCtx.createBiquadFilter();
+  droneFilter.type = 'lowpass';
+  droneFilter.frequency.value = 280;
+
+  const oscA = audioCtx.createOscillator();
+  oscA.type = 'sine';
+  oscA.frequency.value = 130.81;
+
+  const oscB = audioCtx.createOscillator();
+  oscB.type = 'triangle';
+  oscB.frequency.value = 196.00;
+
+  const dGain = audioCtx.createGain();
+  dGain.gain.value = 0.18;
+
+  oscA.connect(droneFilter);
+  oscB.connect(droneFilter);
+  droneFilter.connect(dGain);
+  dGain.connect(masterGain);
+
+  oscA.start();
+  oscB.start();
+}
+
+function playAcousticPluck(freq, velocity = 0.25) {
+  if (!audioCtx || !audioOn) return;
+  const now = audioCtx.currentTime;
+
+  const osc = audioCtx.createOscillator();
+  const overtone = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, now);
+
+  overtone.type = 'triangle';
+  overtone.frequency.setValueAtTime(freq * 2.005, now);
+
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(freq * 3.5, now);
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.linearRampToValueAtTime(velocity, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+
+  osc.connect(filter);
+  overtone.connect(filter);
+  filter.connect(gain);
+  gain.connect(masterGain);
+
+  osc.start(now);
+  overtone.start(now);
+  osc.stop(now + 2.3);
+  overtone.stop(now + 2.3);
+}
+
+function scheduleChimes() {
+  if (!audioOn) return;
+  const currentScale = scales[currentPageIndex % scales.length];
+  const randomNote = currentScale[Math.floor(Math.random() * currentScale.length)];
+  playAcousticPluck(randomNote, 0.18);
+
+  const nextInterval = 1400 + Math.random() * 1600;
+  chimeTimer = setTimeout(scheduleChimes, nextInterval);
+}
+
+function onPageChange(idx) {
+  if (audioCtx && audioOn) {
+    const activeScale = scales[idx % scales.length];
+    playAcousticPluck(activeScale[0] * 0.5, 0.2);
+    setTimeout(() => playAcousticPluck(activeScale[2], 0.18), 120);
+  }
+}
+
+soundToggle.addEventListener('click', () => {
+  initInstrumentAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  audioOn = !audioOn;
+  soundToggle.classList.toggle('on', audioOn);
+  soundLabel.textContent = audioOn ? 'from Me' : 'please tap';
+
+  const now = audioCtx.currentTime;
+  masterGain.gain.setValueAtTime(audioOn ? 0.35 : 0, now);
+
+  if (audioOn) {
+    scheduleChimes();
+    onPageChange(currentPageIndex);
+  } else if (chimeTimer) {
+    clearTimeout(chimeTimer);
+  }
+});
+</script>
+</body>
+</html>
