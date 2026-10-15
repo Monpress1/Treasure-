@@ -252,7 +252,7 @@
     </div>
 
     <!-- Navigation Control Bar -->
-    <div class="absolute bottom-6 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 pointer-events-none">
+    <div class="absolute bottom-6 left-0 right-0 z-10 flex items-center justify-between px-6 md:px-12 pointer-events-none" style=" margin-bottom:30px;" >
         <button onclick="prevSlide()" class="pointer-events-auto glass-btn w-12 h-12 rounded-full flex items-center justify-center text-amber-300 transition active:scale-90">
             <i class="fa-solid fa-chevron-left text-lg"></i>
         </button>
@@ -398,18 +398,18 @@
                 emoji.className = "absolute text-2xl sm:text-4xl pointer-events-none transition-all duration-1000 ease-out";
                 emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                 emoji.style.left = `${Math.random() * window.innerWidth}px`;
-                emoji.style.top = `${window.innerHeight + 20}px`;
+                emoji.style.top = `${window.innerHeight + 150}px`;
                 document.getElementById('emojiLayer').appendChild(emoji);
 
                 setTimeout(() => {
                     emoji.style.transform = `translate(${(Math.random() - 0.5) * 150}px, -${window.innerHeight + 100}px) scale(${1.2 + Math.random()})`;
                     emoji.style.opacity = '0';
-                }, 50);
+                }, 70);
 
                 setTimeout(() => emoji.remove(), 2500);
             }
         }
-        setInterval(autoSpawnEmojis, 800);
+        setInterval(autoSpawnEmojis, 1000);
 
         // --- Slide 1: Ambient Floating Golden Particles ---
         (function initSlide1() {
