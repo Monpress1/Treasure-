@@ -1,731 +1,262 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Pastor OMONS ENAHOLO</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Matter.js Physics Engine -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vee Fashion House | Premium Kenyan Fashion & Style</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{brand:{crimson:'#BE123C',gold:'#D97706',mpesa:'#00A859',dark:'#111827'}},fontFamily:{sans:['Inter','sans-serif']}}}}
+</script>
+<style>
+.no-sb::-webkit-scrollbar{display:none}.no-sb{scrollbar-width:none}
+#orb,#notch{transition:left .5s cubic-bezier(.34,1.4,.64,1)}
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
-            background-color: #030712;
-            touch-action: manipulation;
-        }
-        .cinzel-font {
-            font-family: 'Cinzel', serif;
-        }
 
-        /* Fluid Slide Transition Animations */
-        .slide {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.92) translateZ(-80px);
-            filter: blur(12px);
-            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .slide.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: scale(1) translateZ(0);
-            filter: blur(0px);
-            z-index: 10;
-        }
-
-        /* Kinetic Glowing Typography */
-        .text-glow-gold {
-            text-shadow: 0 0 25px rgba(245, 158, 11, 0.8), 0 0 50px rgba(245, 158, 11, 0.4), 0 0 90px rgba(217, 119, 6, 0.3);
-        }
-        .text-glow-cyan {
-            text-shadow: 0 0 25px rgba(6, 182, 212, 0.8), 0 0 50px rgba(6, 182, 212, 0.4);
-        }
-        .text-glow-magenta {
-            text-shadow: 0 0 25px rgba(217, 70, 239, 0.8), 0 0 50px rgba(217, 70, 239, 0.4);
-        }
-
-        /* Frame Halos */
-        .halo-ring {
-            box-shadow: 0 0 60px rgba(245, 158, 11, 0.7), inset 0 0 35px rgba(245, 158, 11, 0.5);
-            animation: ringGlow 4s infinite alternate ease-in-out;
-        }
-        @keyframes ringGlow {
-            0% { box-shadow: 0 0 45px rgba(245, 158, 11, 0.6), inset 0 0 25px rgba(245, 158, 11, 0.4); }
-            50% { box-shadow: 0 0 90px rgba(236, 72, 153, 0.85), inset 0 0 45px rgba(236, 72, 153, 0.6); }
-            100% { box-shadow: 0 0 110px rgba(168, 85, 247, 0.95), inset 0 0 55px rgba(168, 85, 247, 0.7); }
-        }
-
-        .glass-btn {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        .glass-btn:hover {
-            background: rgba(255, 255, 255, 0.22);
-            border-color: rgba(255, 255, 255, 0.45);
-        }
-
-        canvas {
-            display: block;
-        }
-    </style>
+.tab{color:#9ca3af;position:relative}.tab .ti{transition:.35s}
+.tab.on{color:#BE123C}.tab.on .ti{opacity:0;transform:translateY(10px) scale(.4)}.tab.on .bdg{display:none}
+.dn.on{color:#BE123C;background:#fff1f2}
+.view{animation:vin .35s ease both}@keyframes vin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{box-shadow:0 0 18px rgba(0,168,89,.35)}50%{box-shadow:0 0 38px rgba(0,168,89,.8)}}
+.glow{animation:glow 1.8s infinite}
+</style>
 </head>
-<body class="text-white w-screen h-screen relative overflow-hidden bg-black select-none">
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
 
-    <!-- Top Overlay Controls -->
-    <div class="absolute top-5 right-5 z-50 flex items-center space-x-3">
-        <button onclick="toggleAudio()" class="glass-btn w-11 h-11 rounded-full flex items-center justify-center text-amber-300 transition active:scale-95">
-            <i id="audioIcon" class="fa-solid fa-volume-xmark text-lg"></i>
-        </button>
+<div class="bg-gray-900 text-white text-[11px] py-1.5 px-3 text-center font-medium">
+  <span class="bg-brand-crimson text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase mr-1">Flash Sale</span>
+  <i class="fa-solid fa-fire text-orange-400"></i> Free nationwide delivery over KSh 10,000 &middot; Pay securely with M-Pesa
+</div>
+
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+    <a href="#" onclick="S.cat='All';go('home');return false" class="flex items-center gap-2 shrink-0">
+      <div class="bg-gradient-to-tr from-brand-crimson to-amber-500 text-white font-black text-xl w-10 h-10 rounded-xl flex items-center justify-center shadow-md">V</div>
+      <div><span class="text-lg font-black tracking-tight block leading-none">VEE <span class="text-brand-crimson">FASHION</span></span>
+      <span class="text-[9px] font-bold tracking-widest text-amber-600 block uppercase">Kenya &bull; Nationwide</span></div>
+    </a>
+    <nav id="dnav" class="hidden md:flex gap-1"></nav>
+    <div class="flex items-center gap-1">
+      <button onclick="srch()" class="p-2.5 rounded-full hover:bg-gray-100" title="Search"><i class="fa-solid fa-magnifying-glass text-lg"></i></button>
+      <button onclick="go('wish')" class="relative p-2.5 rounded-full hover:bg-gray-100" title="Wishlist"><i class="fa-regular fa-heart text-xl"></i>
+        <span data-b="wish" class="hidden absolute top-0 right-0 bg-brand-crimson text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span></button>
+      <button onclick="go('cart')" class="relative p-2.5 rounded-full hover:bg-gray-100 flex items-center gap-2" title="Cart"><i class="fa-solid fa-bag-shopping text-xl"></i>
+        <span data-b="cart" class="hidden absolute top-0 right-0 bg-brand-crimson text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        <span id="hTotal" class="hidden lg:inline text-sm font-bold">KSh 0</span></button>
     </div>
-
-    <!-- Floating Emojis Layer -->
-    <div id="emojiLayer" class="absolute inset-0 z-30 pointer-events-none overflow-hidden"></div>
-
-    <!-- Slides Container -->
-    <div id="slidesWrapper" class="w-full h-full relative overflow-hidden">
-
-        <!-- ================= SLIDE 1: Picture 1 (`p1.jpg`) Hero Frame ================= -->
-        <div class="slide active flex flex-col items-center justify-center p-6 bg-gradient-to-br from-neutral-950 via-amber-950 to-slate-950">
-            <div id="canvas1" class="absolute inset-0 z-0"></div>
-
-            <div class="z-20 flex flex-col items-center text-center max-w-5xl px-4 pointer-events-auto">
-                <!-- Massive Hero Frame for p1.jpg -->
-                <div class="relative w-72 h-72 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] rounded-full p-3.5 halo-ring mb-8 group cursor-pointer transition-transform duration-500 hover:scale-105">
-                    <img id="p1" src="p1.jpg" alt="Pastor OMONS ENAHOLO" class="w-full h-full object-cover rounded-full border-4 border-amber-300 shadow-2xl" onerror="this.src='https://placehold.co/800x800/d97706/ffffff?text=Pastor+OMONS+ENAHOLO'">
-                    <label for="p1Input" class="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-xs text-amber-200">
-                        <i class="fa-solid fa-camera text-3xl mb-2"></i>
-                        <span class="font-bold">Replace Photo (p1.jpg)</span>
-                    </label>
-                    <input type="file" id="p1Input" accept="image/*" class="hidden" onchange="uploadImage(event, 'p1')">
-                </div>
-
-                <h1 class="cinzel-font text-glow-gold text-4xl sm:text-6xl md:text-7xl font-black tracking-wider bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-100 bg-clip-text text-transparent mb-3">
-                    HAPPY BIRTHDAY
-                </h1>
-                <h2 class="cinzel-font text-2xl sm:text-4xl md:text-5xl font-extrabold text-white mb-2">
-                    PASTOR OMONS ENAHOLO
-                </h2>
-                <p class="text-amber-200/90 text-lg sm:text-2xl font-light tracking-wide italic">
-                    "A Man After God's Own Heart"
-                </p>
-            </div>
-        </div>
-
-        <!-- ================= SLIDE 2: Soft Blurred 3D Curly Ribbon & Divine Cross ================= -->
-        <div class="slide flex flex-col items-center justify-between p-8 bg-gradient-to-br from-indigo-950 via-slate-950 to-amber-950">
-            <!-- Canvas with slight soft blur filter applied -->
-            <div id="canvas2" class="absolute inset-0 z-0" style="filter: blur(1.5px);"></div>
-
-            <div class="z-20 text-center mt-12 pointer-events-none max-w-4xl">
-                <h2 class="cinzel-font text-glow-gold text-4xl sm:text-6xl md:text-7xl font-black text-amber-200 mb-4">
-                    PILLAR OF FAITH
-                </h2>
-                <p class="text-amber-100 text-xl sm:text-3xl font-light italic leading-relaxed">
-                    "Steadfast in truth, shining with divine grace and wisdom."
-                </p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- ================= SLIDE 3: Dynamic 3D Water Ripple ================= -->
-        <div class="slide flex flex-col items-center justify-between p-8 bg-gradient-to-br from-rose-950 via-purple-950 to-slate-950">
-            <div id="canvas3" class="absolute inset-0 z-0"></div>
-
-            <div class="z-20 text-center mt-12 pointer-events-none max-w-4xl">
-                <h2 class="cinzel-font text-glow-magenta text-4xl sm:text-6xl md:text-7xl font-black text-pink-200 mb-4">
-                    SHEPHERD OF COMPASSION
-                </h2>
-                <p class="text-pink-100 text-xl sm:text-3xl font-light italic leading-relaxed">
-                    "Overflowing with love, joy, and selfless service to God's people."
-                </p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- ================= SLIDE 4: Divine Radiance (Replacing Global Light) ================= -->
-        <div class="slide flex flex-col items-center justify-between p-8 bg-gradient-to-br from-blue-950 via-cyan-950 to-slate-950">
-            <div id="canvas4" class="absolute inset-0 z-0"></div>
-
-            <div class="z-20 text-center mt-12 pointer-events-none max-w-4xl">
-                <h2 class="cinzel-font text-glow-cyan text-4xl sm:text-6xl md:text-7xl font-black text-cyan-200 mb-4">
-                    DIVINE WISDOM
-                </h2>
-                <p class="text-cyan-100 text-xl sm:text-3xl font-light italic leading-relaxed">
-                    "Guiding lives with spiritual insight and heavenly understanding."
-                </p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- ================= SLIDE 5: Touch-Interactive Matter.js Falling Balls Pit ================= -->
-        <div class="slide flex flex-col items-center justify-between p-6 bg-gradient-to-br from-emerald-950 via-teal-950 to-black">
-            <div id="matterCanvas5" class="absolute inset-0 z-0 touch-none"></div>
-
-            <div class="z-20 text-center mt-10 pointer-events-none max-w-4xl">
-                <h2 class="cinzel-font text-3xl sm:text-5xl md:text-6xl font-black text-emerald-200 mb-2">
-                    ABUNDANCE OF BLESSINGS
-                </h2>
-                <p class="text-emerald-300 text-lg sm:text-2xl font-light italic">
-                    "Good measure, pressed down, shaken together, and running over!"
-                </p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- ================= SLIDE 6: Floating 3D Golden Crown ================= -->
-        <div class="slide flex flex-col items-center justify-between p-8 bg-gradient-to-br from-amber-950 via-purple-950 to-neutral-950">
-            <div id="canvas6" class="absolute inset-0 z-0"></div>
-
-            <div class="z-20 text-center mt-12 pointer-events-none max-w-4xl">
-                <h2 class="cinzel-font text-glow-gold text-4xl sm:text-6xl md:text-7xl font-black text-amber-200 mb-4">
-                    MENTOR & VISIONARY
-                </h2>
-                <p class="text-amber-100 text-xl sm:text-3xl font-light italic leading-relaxed">
-                    "Crowned with honor, raising champions for the Kingdom."
-                </p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- ================= SLIDE 7: Automatic Continuous Celebration Confetti ================= -->
-        <div class="slide flex flex-col items-center justify-between p-8 bg-gradient-to-br from-fuchsia-950 via-amber-950 to-indigo-950">
-            <div id="canvas7" class="absolute inset-0 z-0"></div>
-
-            <div class="z-20 text-center mt-12 pointer-events-none max-w-4xl">
-                <h2 class="cinzel-font text-glow-magenta text-4xl sm:text-6xl md:text-7xl font-black text-pink-200 mb-4">
-                    IMPACT & LEGACY
-                </h2>
-                <p class="text-amber-200 text-xl sm:text-3xl font-light italic leading-relaxed">
-                    "Celebrating years of powerful transformation, miracles, and leadership!"
-                </p>
-            </div>
-            <div></div>
-        </div>
-
-        <!-- ================= SLIDE 8: Picture 2 (`p2.jpg`) Hero Frame ================= -->
-        <div class="slide flex flex-col items-center justify-center p-6 bg-gradient-to-br from-amber-950 via-slate-950 to-indigo-950">
-            <div id="canvas8" class="absolute inset-0 z-0"></div>
-
-            <div class="z-20 flex flex-col items-center text-center max-w-5xl px-4 pointer-events-auto">
-                <div class="relative w-72 h-72 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] rounded-full p-3.5 halo-ring mb-8 group cursor-pointer transition-transform duration-500 hover:scale-105">
-                    <img id="p2" src="p2.png" alt="Pastor OMONS ENAHOLO" class="w-full h-full object-cover rounded-full border-4 border-amber-300 shadow-2xl" onerror="this.src='https://placehold.co/800x800/d97706/ffffff?text=Pastor+OMONS+ENAHOLO'">
-                    <label for="p2Input" class="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-xs text-amber-200">
-                        <i class="fa-solid fa-camera text-3xl mb-2"></i>
-                        <span class="font-bold">Replace Photo (p2.jpg)</span>
-                    </label>
-                    <input type="file" id="p2Input" accept="image/*" class="hidden" onchange="uploadImage(event, 'p2')">
-                </div>
-
-                <h2 class="cinzel-font text-glow-gold text-3xl sm:text-5xl md:text-6xl font-black text-amber-300 mb-4">
-                    GOD BLESS YOU PASTOR OMONS!
-                </h2>
-                <p class="text-gray-200 text-base sm:text-2xl font-light max-w-3xl mb-8 leading-relaxed">
-                    May this new age bring unprecedented expansion, divine health, supernatural protection, and endless victories!
-                </p>
-
-                <button onclick="goToSlide(0)" class="glass-btn px-8 py-3.5 rounded-full text-sm font-bold text-white hover:bg-amber-500 hover:text-black transition flex items-center space-x-2">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    <span>Replay Celebration</span>
-                </button>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Navigation Control Bar -->
-    <div class="absolute bottom-6 left-0 right-0 z-10 flex items-center justify-between px-6 md:px-12 pointer-events-none" style=" margin-bottom:30px;" >
-        <button onclick="prevSlide()" class="pointer-events-auto glass-btn w-12 h-12 rounded-full flex items-center justify-center text-amber-300 transition active:scale-90">
-            <i class="fa-solid fa-chevron-left text-lg"></i>
-        </button>
-
-        <div id="slideDots" class="pointer-events-auto glass-btn px-4 py-2 rounded-full flex items-center space-x-2">
-            <!-- Dynamically populated -->
-        </div>
-
-        <button onclick="nextSlide()" class="pointer-events-auto glass-btn w-12 h-12 rounded-full flex items-center justify-center text-amber-300 transition active:scale-90">
-            <i class="fa-solid fa-chevron-right text-lg"></i>
-        </button>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 glass-btn px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-amber-300 opacity-0 transition-opacity duration-300 pointer-events-none">
-        Notification
-    </div>
-
-    <script>
-        // Core State
-        let currentSlide = 0;
-        const totalSlides = 8;
-        let isAudioEnabled = false;
-        let audioCtx = null;
-
-        function updateDots() {
-            const container = document.getElementById('slideDots');
-            container.innerHTML = '';
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = `h-2.5 rounded-full transition-all duration-500 ${i === currentSlide ? 'bg-amber-400 w-8' : 'bg-white/30 w-2.5 hover:bg-white/60'}`;
-                dot.onclick = () => goToSlide(i);
-                container.appendChild(dot);
-            }
-        }
-
-        function goToSlide(index) {
-            currentSlide = (index + totalSlides) % totalSlides;
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach((slide, idx) => {
-                if (idx === currentSlide) slide.classList.add('active');
-                else slide.classList.remove('active');
-            });
-            updateDots();
-            playSynthChord(220 + currentSlide * 45);
-
-            if (currentSlide === 4) initMatterScene5();
-            if (currentSlide === 6) launchConfetti();
-            if (currentSlide === 7) { launchConfetti(); startFireworks(); }
-        }
-
-        function nextSlide() { goToSlide(currentSlide + 1); }
-        function prevSlide() { goToSlide(currentSlide - 1); }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
-        });
-
-        // Enable orientation/tilt automatically on first touch or load
-        window.addEventListener('deviceorientation', (e) => {
-            if (e.gamma !== null && e.beta !== null && matterEngine5) {
-                matterEngine5.world.gravity.x = e.gamma / 14;
-                matterEngine5.world.gravity.y = Math.min(e.beta / 14, 1.5);
-            }
-        }, true);
-
-        let touchStartX = 0;
-        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-        document.addEventListener('touchend', e => {
-            // Ignore horizontal slide navigation if touching inside Matter.js canvas
-            if (e.target.closest('#matterCanvas5')) return;
-            const diff = e.changedTouches[0].screenX - touchStartX;
-            if (diff < -60) nextSlide();
-            if (diff > 60) prevSlide();
-        });
-
-        function uploadImage(event, elementId) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById(elementId).src = e.target.result;
-                    showToast("Photo updated successfully!");
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.classList.remove('opacity-0');
-            setTimeout(() => toast.classList.add('opacity-0'), 2500);
-        }
-
-        function initAudio() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        function toggleAudio() {
-            initAudio();
-            isAudioEnabled = !isAudioEnabled;
-            const icon = document.getElementById('audioIcon');
-            if (isAudioEnabled) {
-                audioCtx.resume();
-                icon.className = "fa-solid fa-volume-high text-lg";
-                showToast("Audio Active");
-                playSynthChord(440);
-            } else {
-                audioCtx.suspend();
-                icon.className = "fa-solid fa-volume-xmark text-lg";
-                showToast("Muted");
-            }
-        }
-
-        function playSynthChord(baseFreq = 300) {
-            if (!isAudioEnabled || !audioCtx) return;
-            const freqs = [baseFreq, baseFreq * 1.25, baseFreq * 1.5];
-            freqs.forEach((f, i) => {
-                setTimeout(() => {
-                    try {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-                        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.start();
-                        osc.stop(audioCtx.currentTime + 0.5);
-                    } catch (e) {}
-                }, i * 70);
-            });
-        }
-
-        // Auto Floating Emojis
-        function autoSpawnEmojis() {
-            if (Math.random() > 0.4) {
-                const emojis = ['❤️', '💕', '💗', '💗', '💙', '🤍', '💙', '💕'];
-                const emoji = document.createElement('div');
-                emoji.className = "absolute text-2xl sm:text-4xl pointer-events-none transition-all duration-1000 ease-out";
-                emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                emoji.style.left = `${Math.random() * window.innerWidth}px`;
-                emoji.style.top = `${window.innerHeight + 150}px`;
-                document.getElementById('emojiLayer').appendChild(emoji);
-
-                setTimeout(() => {
-                    emoji.style.transform = `translate(${(Math.random() - 0.5) * 150}px, -${window.innerHeight + 100}px) scale(${1.2 + Math.random()})`;
-                    emoji.style.opacity = '0';
-                }, 70);
-
-                setTimeout(() => emoji.remove(), 2500);
-            }
-        }
-        setInterval(autoSpawnEmojis, 1000);
-
-        // --- Slide 1: Ambient Floating Golden Particles ---
-        (function initSlide1() {
-            const container = document.getElementById('canvas1');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const count = 350;
-            const geometry = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            for (let i = 0; i < count * 3; i++) pos[i] = (Math.random() - 0.5) * 12;
-            geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            const material = new THREE.PointsMaterial({ size: 0.05, color: 0xf59e0b, transparent: true, opacity: 0.85 });
-            const points = new THREE.Points(geometry, material);
-            scene.add(points);
-
-            function animate() {
-                requestAnimationFrame(animate);
-                points.rotation.y += 0.0015;
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        // --- Slide 2: 3D Curly Ribbon & Cross ---
-        (function initSlide2() {
-            const container = document.getElementById('canvas2');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 6;
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const light = new THREE.DirectionalLight(0xffd700, 1.5);
-            light.position.set(5, 5, 5);
-            scene.add(light);
-            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-
-            class CustomCurve extends THREE.Curve {
-                getPoint(t) {
-                    const tx = Math.sin(t * Math.PI * 4) * 2.2;
-                    const ty = (t - 0.5) * 5;
-                    const tz = Math.cos(t * Math.PI * 4) * 2.2;
-                    return new THREE.Vector3(tx, ty, tz);
-                }
-            }
-            const path = new CustomCurve();
-            const tubeGeom = new THREE.TubeGeometry(path, 120, 0.12, 16, false);
-            const tubeMat = new THREE.MeshPhongMaterial({ color: 0xf59e0b, shininess: 100, specular: 0xffffff });
-            const tube = new THREE.Mesh(tubeGeom, tubeMat);
-            scene.add(tube);
-
-            const crossGroup = new THREE.Group();
-            const vert = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2.2, 0.3), new THREE.MeshPhongMaterial({ color: 0xffd700 }));
-            const horiz = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.3, 0.3), new THREE.MeshPhongMaterial({ color: 0xffd700 }));
-            horiz.position.y = 0.4;
-            crossGroup.add(vert, horiz);
-            scene.add(crossGroup);
-
-            function animate() {
-                requestAnimationFrame(animate);
-                tube.rotation.y += 0.008;
-                crossGroup.rotation.y += 0.012;
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        // --- Slide 3: 3D Water Ripple Surface ---
-        (function initSlide3() {
-            const container = document.getElementById('canvas3');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, -2, 4);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const geometry = new THREE.PlaneGeometry(10, 10, 48, 48);
-            const material = new THREE.MeshBasicMaterial({ color: 0xec4899, wireframe: true, transparent: true, opacity: 0.45 });
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.rotation.x = -Math.PI / 3;
-            scene.add(mesh);
-
-            let clock = new THREE.Clock();
-            function animate() {
-                requestAnimationFrame(animate);
-                const time = clock.getElapsedTime();
-                const pos = geometry.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    const u = pos.getX(i);
-                    const v = pos.getY(i);
-                    const z = Math.sin(u * 2 + time * 3) * 0.2 + Math.cos(v * 2 + time * 2) * 0.2;
-                    pos.setZ(i, z);
-                }
-                pos.needsUpdate = true;
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        // --- Slide 4: Divine Radiance Beams ---
-        (function initSlide4() {
-            const container = document.getElementById('canvas4');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 4.5;
-
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const raysGroup = new THREE.Group();
-            for (let i = 0; i < 30; i++) {
-                const rayGeom = new THREE.CylinderGeometry(0.01, 0.05, 4.5, 8);
-                const rayMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.3 });
-                const ray = new THREE.Mesh(rayGeom, rayMat);
-                ray.rotation.x = Math.random() * Math.PI;
-                ray.rotation.z = Math.random() * Math.PI;
-                raysGroup.add(ray);
-            }
-            scene.add(raysGroup);
-
-            function animate() {
-                requestAnimationFrame(animate);
-                raysGroup.rotation.y += 0.003;
-                raysGroup.rotation.z += 0.001;
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        // --- Slide 5: Touch & Flick Interactive Falling Balls Pit ---
-        let matterEngine5 = null;
-        let ballsList5 = [];
-        function initMatterScene5() {
-            const container = document.getElementById('matterCanvas5');
-            if (matterEngine5) return;
-
-            const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
-            matterEngine5 = Engine.create();
-            const world = matterEngine5.world;
-
-            const render = Render.create({
-                element: container,
-                engine: matterEngine5,
-                options: { width: window.innerWidth, height: window.innerHeight, wireframes: false, background: 'transparent' }
-            });
-            Render.run(render);
-            Runner.run(Runner.create(), matterEngine5);
-
-            const pad = 60;
-            const midFloor = window.innerHeight * 0.88;
-            const ground = Bodies.rectangle(window.innerWidth/2, midFloor, window.innerWidth*2, pad, { isStatic: true });
-            const left = Bodies.rectangle(-pad/2, window.innerHeight/2, pad, window.innerHeight*2, { isStatic: true });
-            const right = Bodies.rectangle(window.innerWidth + pad/2, window.innerHeight/2, pad, window.innerHeight*2, { isStatic: true });
-            Composite.add(world, [ground, left, right]);
-
-            const colors = ['#10b981', '#f59e0b', '#06b6d4', '#ec4899', '#8b5cf6', '#3b82f6'];
-            for (let i = 0; i < 65; i++) {
-                setTimeout(() => {
-                    const r = Math.min(window.innerWidth * 0.045, 28);
-                    const ball = Bodies.circle(Math.random() * window.innerWidth, -30, r, {
-                        restitution: 0.8,
-                        friction: 0.01,
-                        render: { fillStyle: colors[Math.floor(Math.random() * colors.length)] }
-                    });
-                    ballsList5.push(ball);
-                    Composite.add(world, ball);
-                }, i * 35);
-            }
-
-            // Interactive Drag/Flick Touch Handler
-            const mouse = Mouse.create(render.canvas);
-            const mouseConstraint = MouseConstraint.create(matterEngine5, {
-                mouse: mouse,
-                constraint: { stiffness: 0.2, render: { visible: false } }
-            });
-            Composite.add(world, mouseConstraint);
-
-            // Flick/Swipe blast reaction across canvas
-            let prevTouch = null;
-            container.addEventListener('touchmove', (e) => {
-                const t = e.touches[0];
-                if (prevTouch) {
-                    const dx = t.clientX - prevTouch.x;
-                    const dy = t.clientY - prevTouch.y;
-                    ballsList5.forEach(b => {
-                        const dist = Math.hypot(b.position.x - t.clientX, b.position.y - t.clientY);
-                        if (dist < 120) {
-                            Matter.Body.applyForce(b, b.position, { x: dx * 0.003, y: dy * 0.003 });
-                        }
-                    });
-                }
-                prevTouch = { x: t.clientX, y: t.clientY };
-            });
-            container.addEventListener('touchend', () => prevTouch = null);
-        }
-
-        // --- Slide 6: 3D Golden Crown ---
-        (function initSlide6() {
-            const container = document.getElementById('canvas6');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const crownGroup = new THREE.Group();
-            const baseGeom = new THREE.CylinderGeometry(1.2, 1.4, 0.4, 16);
-            const crownMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true });
-            const base = new THREE.Mesh(baseGeom, crownMat);
-            crownGroup.add(base);
-
-            for (let i = 0; i < 5; i++) {
-                const spikeGeom = new THREE.ConeGeometry(0.25, 0.8, 8);
-                const spike = new THREE.Mesh(spikeGeom, crownMat);
-                const angle = (i / 5) * Math.PI * 2;
-                spike.position.set(Math.cos(angle) * 1.2, 0.5, Math.sin(angle) * 1.2);
-                crownGroup.add(spike);
-            }
-            scene.add(crownGroup);
-
-            function animate() {
-                requestAnimationFrame(animate);
-                crownGroup.rotation.y += 0.01;
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        // --- Slide 7: Particle Scene ---
-        (function initSlide7() {
-            const container = document.getElementById('canvas7');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const count = 300;
-            const geometry = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            for (let i = 0; i < count * 3; i++) pos[i] = (Math.random() - 0.5) * 10;
-            geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            const material = new THREE.PointsMaterial({ size: 0.06, color: 0xd946ef });
-            const points = new THREE.Points(geometry, material);
-            scene.add(points);
-
-            function animate() {
-                requestAnimationFrame(animate);
-                points.rotation.y += 0.005;
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        // --- Slide 8: Fireworks Canvas ---
-        (function initSlide8() {
-            const container = document.getElementById('canvas8');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            function animate() {
-                requestAnimationFrame(animate);
-                renderer.render(scene, camera);
-            }
-            animate();
-        })();
-
-        function startFireworks() {
-            let count = 0;
-            const interval = setInterval(() => {
-                confetti({
-                    particleCount: 60,
-                    startVelocity: 30,
-                    spread: 360,
-                    origin: { x: Math.random(), y: Math.random() * 0.5 }
-                });
-                count++;
-                if (count > 8) clearInterval(interval);
-            }, 400);
-        }
-
-        function launchConfetti() {
-            confetti({
-                particleCount: 90,
-                spread: 80,
-                origin: { y: 0.6 }
-            });
-            playSynthChord(550);
-        }
-
-        window.onload = () => {
-            updateDots();
-        };
-
-        window.addEventListener('resize', () => {
-            updateDots();
-        });
-    </script>
+  </div>
+</header>
+
+<main id="app" class="max-w-7xl mx-auto px-3 sm:px-6 py-4 pb-36 md:pb-10 min-h-[70vh]"></main>
+
+<!-- CURVED BOTTOM NAV + FLOATING ORB -->
+<div id="nav" class="fixed bottom-0 inset-x-0 z-40 md:hidden">
+  <div id="orb" class="pointer-events-none absolute z-20 -top-[27px] w-[54px] h-[54px] -translate-x-1/2 rounded-full bg-gradient-to-br from-brand-crimson to-orange-500 text-white flex items-center justify-center text-xl shadow-[0_8px_18px_rgba(190,18,60,.45)] ring-[5px] ring-gray-50" style="left:10%"><i id="orbIcon" class="fa-solid fa-house"></i></div>
+  <div id="notch" class="pointer-events-none absolute z-10 top-0 h-[38px] w-[76px] -translate-x-1/2 overflow-hidden" style="left:10%"><div class="w-[76px] h-[76px] -mt-[38px] rounded-full bg-gray-50"></div></div>
+  <div id="bar" class="bg-white h-[calc(68px+env(safe-area-inset-bottom,0px))] pb-[env(safe-area-inset-bottom,0px)] grid grid-cols-5 shadow-[0_-6px_18px_rgba(0,0,0,.08)]"></div>
+</div>
+
+<!-- PRODUCT SHEET -->
+<div id="sheet" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-4">
+  <div onclick="$('sheet').classList.add('hidden')" class="absolute inset-0 bg-black/60"></div>
+  <div id="sheetBody" class="view relative bg-white w-full max-w-2xl rounded-t-3xl md:rounded-3xl max-h-[92vh] overflow-y-auto"></div>
+</div>
+<div id="toasts" class="fixed top-16 right-3 z-[60] space-y-2 pointer-events-none"></div>
+
+<script>
+/* ---------- DATA ---------- */
+const P=[
+[1,'Royal Kitenge Flare Dress','African Prints',4500,6500,4.9,48,'1590736704728-f4730bb30770','HOT SELLER','Handcrafted Ankara dress in rich cotton with a flared hem and matching headwrap.'],
+[2,"Men's Slim Fit 3-Piece Suit",'Men',13500,18000,4.8,32,'1507679799987-c73779587ccf','EXECUTIVE','Jacket, double-breasted vest and tailored trousers for weddings and formal events.'],
+[3,'Ankara Off-Shoulder Maxi Dress','African Prints',3800,5200,4.7,24,'1563178406-4cdc2923acbc','NEW','Bold geometric Ankara print in a light, breathable fabric.'],
+[4,'Urban Low-Top Leather Sneakers','Shoes',3200,4800,4.6,71,'1549298916-b41d501d3772','SALE','White leather sneakers with cushioned insoles and anti-slip soles.'],
+[5,'Designer Tote Handbag','Accessories',5500,7800,4.9,40,'1584917865442-de89df76afd3','TRENDING','Spacious tote with gold buckles, zip compartments and adjustable strap.'],
+[6,"Men's Ankara Collared Shirt",'Men',2800,3600,4.8,59,'1602810318383-e386cc2a3ccf','POPULAR','Casual button-up with a distinctive African pattern panel.'],
+[7,'Silk Pleated Evening Gown','Women',7500,9800,4.9,18,'1515886657613-9f3515b0c78f','LUXURY','Flowing satin-silk pleats with a waist cinch for galas and formal dinners.'],
+[8,"Men's Leather Loafers",'Shoes',6800,8900,4.8,36,'1614252235316-8c857d38b5f4','PREMIUM','Genuine leather slip-ons with fine stitching and durable soles.'],
+[9,'Oversized Heavyweight Hoodie','Hoodies',3500,4800,4.8,86,'1556821840-3a63f95609a7','BEST SELLER','420gsm brushed fleece, drop shoulders and a roomy kangaroo pocket.'],
+[10,'Zip-Up Fleece Hoodie','Hoodies',3900,5200,4.7,52,'1620799140408-edc6dcb6d633','COZY','Full-zip fleece hoodie with ribbed cuffs and a soft lining.'],
+[11,'Cropped Pullover Hoodie','Hoodies',3200,4400,4.7,44,'1578587018452-892bacefd3f2','NEW','Cropped cut with a relaxed fit, perfect with high-waist jeans.'],
+[12,'Ankara Panel Hoodie','Hoodies',4200,5600,4.9,29,'1556905055-8f358a7a47b2','LIMITED','Streetwear hoodie with hand-stitched Ankara sleeve panels.'],
+[13,"Men's Fleece Tracksuit Set",'Men',5800,7500,4.6,37,'1583743814966-8936f5b7be1a','SET','Matching jacket and joggers for gym, travel and weekends.'],
+[14,'Classic Denim Jacket','Men',4600,6200,4.7,41,'1551028719-00167b16eac5','CLASSIC','Washed denim with a structured fit and metal button front.'],
+[15,'Wrap Midi Dress','Women',4200,5800,4.8,33,'1496747611176-843222e1e57c','TRENDING','Flattering wrap silhouette in a soft floral crepe.'],
+[16,'Palazzo & Crop Top Set','Women',4800,6400,4.7,21,'1509631179647-0177331693ae','SET','Wide-leg palazzo pants with a matching tailored crop top.'],
+[17,'Block Heel Sandals','Shoes',3600,5000,4.6,48,'1543163521-1bf539c55dd2','NEW','Comfortable block heels with adjustable ankle straps.'],
+[18,'Canvas Everyday Backpack','Accessories',2900,3900,4.7,63,'1553062407-98eeb64c6a62','POPULAR','Water-resistant canvas, padded laptop sleeve and leather trim.'],
+[19,'Kitenge Bucket Hat & Scarf Set','Accessories',1500,2200,4.8,57,'1521369909029-2afed882baee','GIFT','Matching Kitenge hat and scarf in a gift-ready pack.'],
+[20,'Gold-Tone Classic Watch','Accessories',4800,6500,4.8,26,'1523275335684-37898b6baf30','LUXURY','Stainless steel case, gold-tone dial and a genuine leather strap.'],
+[21,"Men's Kitenge Kaftan Set",'African Prints',6200,8200,4.9,19,'1617137968427-85924c800a22','HERITAGE','Embroidered kaftan top with matching trousers, tailored in Kitenge.'],
+[22,'Street Runner Sneakers','Shoes',4200,5600,4.7,64,'1542291026-7eec264c27ff','HOT','Lightweight mesh runners with responsive foam soles.']
+].map(a=>({id:a[0],t:a[1],c:a[2],p:a[3],o:a[4],r:a[5],n:a[6],i:`https://images.unsplash.com/photo-${a[7]}?auto=format&fit=crop&w=700&q=80`,b:a[8],d:a[9]}));
+
+const C=[['All','fa-fire','from-orange-400 to-rose-500 shadow-rose-200'],['African Prints','fa-earth-africa','from-amber-400 to-orange-600 shadow-orange-200'],['Women','fa-person-dress','from-pink-400 to-fuchsia-600 shadow-pink-200'],['Men','fa-user-tie','from-sky-400 to-indigo-600 shadow-sky-200'],['Hoodies','fa-shirt','from-emerald-400 to-teal-600 shadow-emerald-200'],['Shoes','fa-shoe-prints','from-violet-400 to-purple-700 shadow-violet-200'],['Accessories','fa-gem','from-yellow-300 to-amber-600 shadow-amber-200']];
+const T=[['home','Home','fa-house'],['shop','Shop','fa-store'],['wish','Wishlist','fa-heart'],['cart','Cart','fa-bag-shopping'],['me','Account','fa-user']];
+const ZN=[[250,'Zone 1 · Major towns'],[400,'Zone 2 · Other towns'],[600,'Zone 3 · Remote areas']];
+const SL=[['1590736704728-f4730bb30770','Kenyan Heritage','African Ankara & Kitenge Grace','Tailor-cut dresses, headwraps and modern African prints delivered countrywide.','African Prints','bg-brand-crimson'],
+['1507679799987-c73779587ccf','Sharp & Dapper','Executive Suits & Blazer Sets','Italian-cut suits, smart shirts and streetwear for the contemporary gentleman.','Men','bg-brand-gold'],
+['1556821840-3a63f95609a7','Hoodie Season','Cosy Hoodies & Streetwear','Oversized, zip-up and Ankara-panel hoodies from KSh 3,200.','Hoodies','bg-emerald-600']];
+const FB="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Crect width='4' height='5' fill='%23fecdd3'/%3E%3C/svg%3E";
+
+/* ---------- STATE / HELPERS ---------- */
+const $=id=>document.getElementById(id),K=n=>'KSh '+n.toLocaleString();
+const S={cart:[],wish:[],orders:[],cat:'All',q:'',sort:'pop',view:'home',step:1,f:{name:'',phone:'',zone:250,addr:''},slide:0,pin:0,sz:'',tm:null,last:null};
+try{Object.assign(S,JSON.parse(localStorage.getItem('vfh')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('vfh',JSON.stringify({cart:S.cart,wish:S.wish,orders:S.orders}))}catch(e){}};
+const prod=id=>P.find(p=>p.id===id);
+const sub=()=>S.cart.reduce((a,i)=>a+prod(i.id).p*i.n,0);
+const ship=()=>(!S.cart.length||sub()>=10000)?0:S.f.zone;
+const qty=()=>S.cart.reduce((a,i)=>a+i.n,0);
+const sizes=p=>p.c==='Shoes'?['39','40','41','42','43','44']:[];
+const dsz=p=>sizes(p)[1]||'';
+S.cart.forEach(i=>{const p=prod(i.id);if(p&&!sizes(p).length)i.s=''});
+const im=(s,c)=>`<img src="${s}" alt="" loading="lazy" onerror="this.onerror=null;this.src=FB" class="${c}">`;
+const stars=r=>[0,1,2,3,4].map(i=>`<i class="fa-solid fa-star ${i<Math.floor(r)?'text-amber-400':'text-gray-300'}"></i>`).join('');
+function toast(m){const e=document.createElement('div');e.className='view bg-gray-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2';e.innerHTML=`<i class="fa-solid fa-circle-check text-emerald-400"></i>${m}`;$('toasts').append(e);setTimeout(()=>e.remove(),2200)}
+
+/* ---------- COMPONENTS ---------- */
+const hd=(ic,t,a)=>`<div class="flex items-center justify-between mb-3 mt-6"><h3 class="font-extrabold text-lg flex items-center gap-2"><i class="fa-solid ${ic} text-brand-crimson"></i>${t}</h3>${a?`<button onclick="${a[1]}" class="text-xs font-bold text-brand-crimson">${a[0]} <i class="fa-solid fa-arrow-right"></i></button>`:''}</div>`;
+const empty=(ic,t,s,b,v)=>`<div class="text-center py-16 bg-white rounded-3xl border border-gray-100"><i class="fa-solid ${ic} text-5xl text-gray-300 mb-3"></i><h4 class="text-lg font-bold">${t}</h4><p class="text-xs text-gray-400 mt-1">${s}</p>${b?`<button onclick="go('${v}')" class="mt-4 bg-brand-crimson text-white px-6 py-2.5 rounded-xl text-xs font-bold shadow-md">${b}</button>`:''}</div>`;
+function card(p){const w=S.wish.includes(p.id),d=Math.round((p.o-p.p)/p.o*100);
+return `<div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition flex flex-col group relative">
+<span class="absolute top-2 left-2 z-10 bg-brand-crimson text-white text-[10px] font-black px-2 py-0.5 rounded-md">-${d}%</span>
+<button data-w="${p.id}" onclick="tw(${p.id})" class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow"><i class="${w?'fa-solid text-brand-crimson':'fa-regular'} fa-heart text-xs"></i></button>
+<div onclick="qv(${p.id})" class="aspect-[4/5] bg-gray-100 overflow-hidden cursor-pointer">${im(p.i,'w-full h-full object-cover group-hover:scale-105 transition duration-300')}</div>
+<div class="p-3 flex-1 flex flex-col justify-between">
+<div><span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider">${p.c}</span>
+<h4 onclick="qv(${p.id})" class="font-bold text-xs sm:text-sm line-clamp-2 mt-0.5 cursor-pointer hover:text-brand-crimson">${p.t}</h4>
+<div class="flex items-center gap-1 mt-1 text-[11px]"><i class="fa-solid fa-star text-amber-400 text-[10px]"></i><b>${p.r}</b><span class="text-gray-400 text-[10px]">(${p.n})</span></div></div>
+<div class="mt-2.5"><div class="flex items-baseline gap-1.5"><span class="text-sm font-black">${K(p.p)}</span><span class="text-[10px] text-gray-400 line-through">${K(p.o)}</span></div>
+<button onclick="add(${p.id})" class="mt-2 w-full bg-gray-900 hover:bg-brand-crimson text-white text-xs font-bold py-2 rounded-xl transition flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div></div></div>`}
+
+/* ---------- VIEWS ---------- */
+const V={
+home(){
+ const hero=`<section class="relative rounded-3xl overflow-hidden bg-gray-900 aspect-[5/4] sm:aspect-[21/8] shadow-xl">${SL.map((s,i)=>`<div class="sl absolute inset-0 transition-opacity duration-700 ${i?'opacity-0':''}">${im(`https://images.unsplash.com/photo-${s[0]}?auto=format&fit=crop&w=1600&q=80`,'w-full h-full object-cover opacity-80')}
+<div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent flex items-center p-6 sm:p-12"><div class="max-w-md text-white space-y-2 sm:space-y-3">
+<span class="inline-block ${s[5]} text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">${s[1]}</span>
+<h2 class="text-2xl sm:text-5xl font-black leading-tight">${s[2]}</h2><p class="text-xs sm:text-sm text-gray-200 line-clamp-2">${s[3]}</p>
+<button onclick="S.cat='${s[4]}';go('shop')" class="${s[5]} text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-lg">Shop now <i class="fa-solid fa-arrow-right ml-1"></i></button></div></div></div>`).join('')}
+<div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">${SL.map((_,i)=>`<button onclick="sl(${i})" class="dt h-2 rounded-full bg-white transition-all ${i?'w-2 opacity-50':'w-7'}"></button>`).join('')}</div></section>`;
+ const trust=`<div class="mt-4 bg-white rounded-2xl border border-gray-100 shadow-sm py-3 grid grid-cols-3 divide-x divide-gray-100">${[['fa-truck-fast','Nationwide delivery','from-rose-500 to-orange-400'],['fa-shield-halved','Secure M&#8209;Pesa','from-emerald-500 to-green-400'],['fa-rotate-left','Easy returns','from-amber-500 to-yellow-400']].map(x=>`<div class="flex flex-col items-center px-2 text-center"><span class="w-11 h-11 rounded-full bg-gradient-to-br ${x[2]} text-white flex items-center justify-center shadow-md ring-4 ring-gray-50"><i class="fa-solid ${x[0]}"></i></span><p class="text-[11px] font-extrabold mt-2 leading-tight">${x[1]}</p></div>`).join('')}</div>`;
+ const cats=`<div class="flex gap-4 overflow-x-auto no-sb py-2 -mx-3 px-3">${C.slice(1).map(c=>`<button onclick="S.cat='${c[0]}';go('shop')" class="shrink-0 w-[76px] text-center active:scale-95 transition"><span class="relative w-[68px] h-[68px] mx-auto rounded-[1.5rem] bg-gradient-to-br ${c[2]} shadow-lg flex items-center justify-center text-white text-2xl overflow-hidden"><span class="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white/25"></span><span class="absolute -bottom-4 -left-2 w-10 h-10 rounded-full bg-black/10"></span><i class="fa-solid ${c[1]} relative drop-shadow"></i></span><span class="text-[11px] font-extrabold mt-2 block leading-tight">${c[0]}</span><span class="text-[9px] text-gray-400 font-semibold">${P.filter(p=>p.c===c[0]).length} items</span></button>`).join('')}</div>`;
+ return hero+trust+hd('layer-group','Shop by Category')+cats+
+ hd('shirt','Hoodie Season',['See all',"S.cat='Hoodies';go('shop')"])+`<div class="flex gap-3 overflow-x-auto no-sb -mx-3 px-3">${P.filter(p=>p.c==='Hoodies').map(p=>`<div class="w-44 shrink-0">${card(p)}</div>`).join('')}</div>`+
+ hd('fire','Trending Now',['View shop',"S.cat='All';go('shop')"])+`<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">${[...P].sort((a,b)=>b.n-a.n).slice(0,8).map(card).join('')}</div>`},
+
+shop(){return `<div class="relative mb-3"><i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400 text-sm"></i>
+<input id="sq" value="${S.q}" oninput="S.q=this.value;grid()" placeholder="Search Kitenge, hoodies, suits, sneakers..." class="w-full pl-10 pr-4 py-3 text-sm bg-white border border-gray-200 rounded-2xl focus:border-brand-crimson focus:outline-none"></div>
+<div class="flex gap-2 overflow-x-auto no-sb py-1">${C.map(c=>`<button onclick="S.cat='${c[0]}';go('shop')" class="shrink-0 border px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 ${S.cat===c[0]?'bg-brand-crimson text-white border-brand-crimson shadow':'bg-white text-gray-700 border-gray-200'}"><i class="fa-solid ${c[1]}"></i>${c[0]}</button>`).join('')}</div>
+<div class="flex items-center justify-between my-3"><span id="cnt" class="text-xs text-gray-500 font-medium"></span>
+<select onchange="S.sort=this.value;grid()" class="text-xs font-semibold bg-white border border-gray-200 rounded-lg px-2 py-1.5">${[['pop','Most popular'],['rate','Top rated'],['low','Price: low to high'],['high','Price: high to low']].map(o=>`<option value="${o[0]}" ${S.sort===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+<div id="grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>`},
+
+wish(){return `<h2 class="text-xl font-black mb-3"><i class="fa-solid fa-heart text-brand-crimson mr-2"></i>Wishlist</h2>`+(S.wish.length?`<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">${S.wish.map(id=>card(prod(id))).join('')}</div>`:empty('fa-heart','No saved items yet','Tap the heart on anything you love.','Browse shop','shop'))},
+
+cart(){if(!S.cart.length)return `<h2 class="text-xl font-black mb-3">Your Cart</h2>`+empty('fa-bag-shopping','Your cart is empty','Explore our Ankara prints, hoodies and sneakers.','Start shopping','shop');
+ const s=sub(),need=10000-s;
+ return `<h2 class="text-xl font-black mb-3"><i class="fa-solid fa-bag-shopping text-brand-crimson mr-2"></i>Your Cart <span class="text-sm text-gray-400 font-semibold">(${qty()} items)</span></h2>
+<div class="grid lg:grid-cols-3 gap-4"><div class="lg:col-span-2 space-y-3">${S.cart.map((it,i)=>{const p=prod(it.id);return `<div class="bg-white rounded-2xl border border-gray-100 p-3 flex gap-3">${im(p.i,'w-20 h-24 object-cover rounded-xl')}
+<div class="flex-1 flex flex-col justify-between"><div><h5 class="text-sm font-bold line-clamp-2">${p.t}</h5>${it.s?`<span class="text-[10px] font-bold bg-gray-100 rounded px-1.5 py-0.5">Size ${it.s}</span>`:''}</div>
+<div class="flex items-center justify-between"><div class="flex items-center bg-gray-100 rounded-lg"><button onclick="cq(${i},-1)" class="w-8 h-8 font-bold">&minus;</button><span class="w-6 text-center text-sm font-bold">${it.n}</span><button onclick="cq(${i},1)" class="w-8 h-8 font-bold">+</button></div>
+<span class="font-black text-sm text-brand-crimson">${K(p.p*it.n)}</span></div></div>
+<button onclick="cq(${i},-99)" class="text-gray-300 hover:text-red-500 self-start"><i class="fa-solid fa-trash-can"></i></button></div>`}).join('')}</div>
+<div class="bg-white rounded-2xl border border-gray-100 p-4 h-fit space-y-3 lg:sticky lg:top-20">
+<div class="text-xs ${need>0?'text-gray-600':'text-emerald-600 font-bold'}"><i class="fa-solid fa-truck-fast mr-1"></i>${need>0?`Add <b>${K(need)}</b> more for free delivery`:'You unlocked free nationwide delivery!'}</div>
+<div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-500 to-brand-crimson rounded-full" style="width:${Math.min(100,s/100)}%"></div></div>
+<div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal</span><b>${K(s)}</b></div>
+<div class="flex justify-between text-sm"><span class="text-gray-500">Delivery</span><b>${need>0?'Set at checkout':'FREE'}</b></div>
+<button onclick="go('checkout')" class="w-full bg-brand-mpesa hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl shadow-lg flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-mobile-screen-button"></i>Checkout with M-PESA</button>
+<button onclick="go('shop')" class="w-full text-xs font-bold text-gray-500">Continue shopping</button></div></div>`},
+
+checkout(){const st=S.step;if(!S.cart.length&&st<3)return V.cart();
+ const names=['Details','Payment','Done'];
+ const bar=`<div class="flex items-center max-w-md mx-auto mb-6">${names.map((n,i)=>`<div class="flex flex-col items-center w-16"><span class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-black ${st>i+1?'bg-brand-mpesa text-white':st===i+1?'bg-brand-crimson text-white shadow-lg':'bg-gray-200 text-gray-400'}">${st>i+1?'<i class="fa-solid fa-check"></i>':i+1}</span><span class="text-[10px] font-bold mt-1 ${st===i+1?'text-gray-900':'text-gray-400'}">${n}</span></div>${i<2?`<div class="flex-1 h-0.5 -mt-4 ${st>i+1?'bg-brand-mpesa':'bg-gray-200'}"></div>`:''}`).join('')}</div>`;
+ let body='';
+ if(st===1){const f=S.f;const inp='w-full px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:border-brand-mpesa focus:outline-none';
+ body=`<form onsubmit="ck1(event)" class="bg-white rounded-3xl border border-gray-100 p-5 space-y-3.5"><h3 class="font-extrabold flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-crimson"></i>Delivery details</h3>
+<input id="fn" required value="${f.name}" placeholder="Full name" class="${inp}">
+<div class="relative"><span class="absolute left-3.5 top-3.5 text-sm font-bold text-gray-400">+254</span><input id="fp" required pattern="[0-9]{9}" value="${f.phone}" placeholder="712345678 (M-Pesa number)" class="${inp} pl-14 font-bold"></div>
+<select id="fz" onchange="S.f.zone=+this.value;$('sumBox').innerHTML=sum()" class="${inp}">${ZN.map(z=>`<option value="${z[0]}" ${f.zone===z[0]?'selected':''}>${z[1]} &mdash; ${K(z[0])}</option>`).join('')}</select>
+<input id="fa" required value="${f.addr}" placeholder="County, town & landmark / street" class="${inp}">
+<button class="w-full bg-brand-crimson hover:bg-rose-800 text-white font-black py-3.5 rounded-2xl shadow-lg text-sm">Continue to payment <i class="fa-solid fa-arrow-right ml-1"></i></button></form>`}
+ if(st===2){const tot=sub()+ship();body=`<div class="bg-white rounded-3xl border border-gray-100 p-6 text-center space-y-4"><span class="text-[10px] font-black text-brand-mpesa uppercase tracking-widest">M-Pesa STK Push</span>
+<p class="text-xs text-gray-500">Prompt sent to <b class="text-gray-900">+254 ${S.f.phone}</b></p>
+<div class="glow mx-auto w-56 rounded-[2.2rem] border-[7px] border-gray-900 bg-white overflow-hidden"><div class="bg-brand-mpesa text-white text-[10px] font-black py-2 tracking-[.3em]">M-PESA</div>
+<div class="p-4 space-y-3 text-xs"><p>Pay <b>${K(tot)}</b> to <b>VEE FASHION HOUSE</b>?</p><div id="pins" class="flex justify-center gap-2">${'<span class="w-3 h-3 rounded-full bg-gray-300"></span>'.repeat(4)}</div><p class="text-[10px] text-gray-400">Enter your M-PESA PIN</p></div></div>
+<button onclick="pay()" class="w-full bg-brand-mpesa hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl shadow-lg text-sm"><i class="fa-solid fa-lock mr-1"></i>Enter PIN &amp; pay ${K(tot)}</button>
+<button onclick="S.step=1;render()" class="text-xs font-bold text-gray-500"><i class="fa-solid fa-arrow-left mr-1"></i>Edit details</button></div>`}
+ if(st===3){const o=S.last||{};return `<div class="max-w-md mx-auto"><div class="text-center mb-4"><span class="w-16 h-16 bg-emerald-100 text-brand-mpesa rounded-full inline-flex items-center justify-center text-3xl"><i class="fa-solid fa-circle-check"></i></span>
+<h2 class="text-2xl font-black mt-2">Asante! Order confirmed</h2><p class="text-xs text-gray-500">We're packing your order for delivery.</p></div>
+<div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden"><div class="bg-brand-mpesa text-white px-5 py-3 flex justify-between items-center"><span class="font-black text-xs tracking-widest">M-PESA RECEIPT</span><b class="font-mono">${o.code}</b></div>
+<div class="p-5 space-y-2.5 text-sm">${[['Paid',K(o.total||0)],['Items',o.n],['Deliver to',S.f.name],['Zone',o.zone],['Status','<span class="text-emerald-600">Dispatching via courier</span>']].map(r=>`<div class="flex justify-between"><span class="text-gray-500">${r[0]}</span><b class="text-right">${r[1]}</b></div>`).join('')}</div></div>
+<div class="grid grid-cols-2 gap-2 mt-4"><button onclick="print()" class="bg-gray-200 font-bold py-3 rounded-2xl text-xs"><i class="fa-solid fa-print mr-1"></i>Print receipt</button><button onclick="go('shop')" class="bg-gray-900 text-white font-bold py-3 rounded-2xl text-xs">Keep shopping</button></div></div>`}
+ return bar+`<div class="grid lg:grid-cols-5 gap-4 max-w-4xl mx-auto"><div class="lg:col-span-3">${body}</div><div id="sumBox" class="lg:col-span-2 h-fit">${sum()}</div></div>`},
+
+me(){const row=(ic,l,v)=>`<div class="flex items-center gap-3 py-2.5"><i class="fa-solid ${ic} w-5 text-brand-crimson"></i><span class="text-gray-500 text-xs flex-1">${l}</span><b class="text-xs text-right">${v}</b></div>`;
+ return `<div class="max-w-lg mx-auto space-y-4"><div class="bg-gradient-to-br from-brand-crimson to-amber-500 text-white rounded-3xl p-6 text-center shadow-lg"><div class="w-16 h-16 bg-white/20 rounded-full mx-auto flex items-center justify-center text-2xl font-black border-2 border-white/60">VF</div>
+<h3 class="font-black text-lg mt-2">Karibu Vee Fashion House</h3><p class="text-xs text-white/80">Official online store &middot; delivering across Kenya</p></div>
+<div class="grid grid-cols-3 gap-2">${[['fa-heart','Wishlist',S.wish.length,'wish'],['fa-bag-shopping','Cart',qty(),'cart'],['fa-receipt','Orders',S.orders.length,'me']].map(x=>`<button onclick="go('${x[3]}')" class="bg-white rounded-2xl border border-gray-100 p-3 text-center"><i class="fa-solid ${x[0]} text-brand-crimson"></i><p class="font-black text-lg">${x[2]}</p><p class="text-[10px] text-gray-400 font-bold">${x[1]}</p></button>`).join('')}</div>
+<div class="bg-white rounded-2xl border border-gray-100 px-4 divide-y divide-gray-100">${row('fa-headset','Customer helpline','+254 700 123 456')}${row('fa-truck-fast','Delivery','Nationwide, all counties')}${row('fa-mobile-screen-button','Payments','M-Pesa STK Push')}</div>
+<div class="bg-white rounded-2xl border border-gray-100 p-4"><h4 class="font-extrabold text-sm mb-2"><i class="fa-solid fa-receipt text-brand-crimson mr-2"></i>Order history</h4>${S.orders.length?S.orders.map(o=>`<div class="flex justify-between text-xs py-2 border-t border-gray-100"><span><b class="font-mono">${o.code}</b><br><span class="text-gray-400">${o.date} &middot; ${o.n} items</span></span><b>${K(o.total)}</b></div>`).join(''):'<p class="text-xs text-gray-400">No orders yet.</p>'}</div></div>`}
+};
+
+function sum(){const s=sub(),sh=ship();return `<div class="bg-white rounded-3xl border border-gray-100 p-5 space-y-3"><h3 class="font-extrabold text-sm">Order summary</h3>
+${S.cart.map(it=>{const p=prod(it.id);return `<div class="flex gap-2.5 items-center">${im(p.i,'w-11 h-14 object-cover rounded-lg')}<div class="flex-1 text-xs"><p class="font-bold line-clamp-1">${p.t}</p><p class="text-gray-400">${it.s?'Size '+it.s+' · ':''}Qty ${it.n}</p></div><b class="text-xs">${K(p.p*it.n)}</b></div>`}).join('')}
+<div class="border-t border-gray-100 pt-3 space-y-1.5 text-sm"><div class="flex justify-between text-gray-500"><span>Subtotal</span><b class="text-gray-900">${K(s)}</b></div><div class="flex justify-between text-gray-500"><span>Delivery</span><b class="text-gray-900">${sh?K(sh):'FREE'}</b></div>
+<div class="flex justify-between font-black text-base pt-2 border-t border-gray-100"><span>Total</span><span class="text-brand-crimson">${K(s+sh)}</span></div></div></div>`}
+
+/* ---------- ACTIONS ---------- */
+function grid(){const q=S.q.toLowerCase();let l=P.filter(p=>(S.cat==='All'||p.c===S.cat)&&(p.t+p.c).toLowerCase().includes(q));
+ l.sort({pop:(a,b)=>b.n-a.n,low:(a,b)=>a.p-b.p,high:(a,b)=>b.p-a.p,rate:(a,b)=>b.r-a.r}[S.sort]);
+ $('cnt').textContent=l.length+' item'+(l.length==1?'':'s');
+ $('grid').innerHTML=l.length?l.map(card).join(''):`<div class="col-span-full">${empty('fa-magnifying-glass','No products found','Try another search or category.')}</div>`}
+function sl(n){S.slide=n;clearInterval(S.tm);S.tm=setInterval(()=>sl((S.slide+1)%SL.length),5000);
+ document.querySelectorAll('.sl').forEach((e,i)=>e.classList.toggle('opacity-0',i!==n));
+ document.querySelectorAll('.dt').forEach((e,i)=>e.className='dt h-2 rounded-full bg-white transition-all '+(i===n?'w-7':'w-2 opacity-50'))}
+function srch(){S.q='';go('shop');setTimeout(()=>$('sq')&&$('sq').focus(),60)}
+function tw(id){const i=S.wish.indexOf(id);i>-1?S.wish.splice(i,1):S.wish.push(id);toast(i>-1?'Removed from wishlist':'Saved to wishlist');
+ if(S.view==='wish')render();else document.querySelectorAll(`[data-w="${id}"] i`).forEach(e=>e.className=(i>-1?'fa-regular':'fa-solid text-brand-crimson')+' fa-heart text-xs');upd()}
+function add(id,s){s=s||dsz(prod(id));const e=S.cart.find(i=>i.id===id&&i.s===s);e?e.n++:S.cart.push({id,s,n:1});upd();toast('Added to cart')}
+function cq(i,d){S.cart[i].n+=d;if(S.cart[i].n<=0)S.cart.splice(i,1);render()}
+function qv(id){const p=prod(id);S.sz=dsz(p);
+ $('sheetBody').innerHTML=`<button onclick="$('sheet').classList.add('hidden')" class="absolute top-3 right-3 z-10 bg-white/90 w-9 h-9 rounded-full shadow flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+<div class="grid md:grid-cols-2"><div class="aspect-square md:aspect-auto bg-gray-100 relative">${im(p.i,'w-full h-full object-cover')}<span class="absolute top-3 left-3 bg-brand-crimson text-white text-[10px] font-black px-2.5 py-1 rounded-md">${p.b}</span></div>
+<div class="p-5 flex flex-col"><span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">${p.c}</span><h3 class="text-lg font-extrabold leading-snug">${p.t}</h3>
+<div class="flex items-center gap-2 mt-1 text-xs">${stars(p.r)}<b>${p.r}</b><span class="text-gray-400">(${p.n} reviews)</span></div>
+<div class="flex items-baseline gap-2 mt-3"><span class="text-2xl font-black text-brand-crimson">${K(p.p)}</span><span class="text-xs text-gray-400 line-through">${K(p.o)}</span></div>
+<p class="text-xs text-gray-600 mt-3 leading-relaxed">${p.d}</p>
+<p class="text-xs font-bold mt-4 mb-1.5 ${sizes(p).length?'':'hidden'}">Select shoe size</p><div class="flex flex-wrap gap-2">${sizes(p).map(s=>`<button data-s="${s}" onclick="sz('${s}')" class="szb px-3.5 py-2 text-xs font-bold border rounded-lg ${s===S.sz?'border-brand-crimson bg-rose-50 text-brand-crimson':'border-gray-200'}">${s}</button>`).join('')}</div>
+<div class="mt-auto pt-5 flex gap-2"><button onclick="tw(${p.id})" data-w="${p.id}" class="w-12 rounded-xl border border-gray-200 flex items-center justify-center"><i class="${S.wish.includes(p.id)?'fa-solid text-brand-crimson':'fa-regular'} fa-heart"></i></button>
+<button onclick="add(${p.id},S.sz);$('sheet').classList.add('hidden')" class="flex-1 bg-brand-crimson text-white font-bold py-3.5 rounded-xl text-sm shadow-md flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i>Add to Cart</button></div></div></div>`;
+ $('sheet').classList.remove('hidden')}
+function sz(s){S.sz=s;document.querySelectorAll('.szb').forEach(b=>b.className='szb px-3.5 py-2 text-xs font-bold border rounded-lg '+(b.dataset.s===s?'border-brand-crimson bg-rose-50 text-brand-crimson':'border-gray-200'))}
+function ck1(e){e.preventDefault();S.f={name:$('fn').value,phone:$('fp').value,zone:+$('fz').value,addr:$('fa').value};S.step=2;render();scrollTo({top:0})}
+function pay(){if(S.pin)return;S.pin=1;const d=document.querySelectorAll('#pins span');let k=0;
+ const t=setInterval(()=>{if(k<4)d[k++].className='w-3 h-3 rounded-full bg-brand-mpesa';else{clearInterval(t);fin()}},350)}
+function fin(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ',r=()=>a[Math.random()*a.length|0],d=()=>Math.random()*10|0;
+ const o={code:'Q'+r()+r()+d()+d()+d()+d()+d()+r()+r(),total:sub()+ship(),zone:ZN.find(z=>z[0]===S.f.zone)[1],n:qty(),date:new Date().toLocaleDateString()};
+ S.orders.unshift(o);S.last=o;S.cart=[];S.pin=0;S.step=3;render();toast('Payment received')}
+
+/* ---------- ROUTER ---------- */
+function upd(){const n=qty(),w=S.wish.length;
+ document.querySelectorAll('[data-b=cart]').forEach(e=>{e.textContent=n;e.classList.toggle('hidden',!n)});
+ document.querySelectorAll('[data-b=wish]').forEach(e=>{e.textContent=w;e.classList.toggle('hidden',!w)});
+ $('hTotal').textContent=K(sub());save()}
+function go(v){clearInterval(S.tm);S.view=v;if(v!=='checkout'){S.step=1;S.pin=0}render();scrollTo({top:0})}
+function render(){const v=S.view;$('app').innerHTML=`<div class="view">${V[v]()}</div>`;
+ const t=v==='checkout'?'cart':v,i=T.findIndex(x=>x[0]===t);
+ const x=(i*20+10)+'%';$('orb').style.left=x;$('notch').style.left=x;const oi=$('orbIcon');if(oi.dataset.i!==String(i)){oi.dataset.i=i;oi.className='fa-solid '+T[i][2];oi.animate&&oi.animate([{transform:'scale(.3) rotate(-90deg)',opacity:0},{transform:'none',opacity:1}],{duration:380,easing:'ease-out'})}
+ document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j===i));
+ document.querySelectorAll('.dn').forEach(b=>b.classList.toggle('on',b.dataset.v===t));
+ if(v==='home')sl(0);if(v==='shop')grid();upd()}
+
+$('bar').innerHTML=T.map(t=>`<button onclick="go('${t[0]}')" class="tab flex flex-col items-center justify-end pb-2 gap-1"><i class="fa-solid ${t[2]} ti text-lg"></i><span class="text-[10px] font-bold">${t[1]}</span>${t[0]==='cart'||t[0]==='wish'?`<span data-b="${t[0]==='cart'?'cart':'wish'}" class="bdg hidden absolute top-2 right-[26%] bg-brand-crimson text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>`:''}</button>`).join('');
+$('dnav').innerHTML=[T[0],T[1],T[4]].map(t=>`<button data-v="${t[0]}" onclick="go('${t[0]}')" class="dn px-4 py-2 rounded-full text-sm font-bold text-gray-600 hover:bg-gray-100"><i class="fa-solid ${t[2]} mr-1.5"></i>${t[1]}</button>`).join('');
+render();
+</script>
 </body>
 </html>
+
